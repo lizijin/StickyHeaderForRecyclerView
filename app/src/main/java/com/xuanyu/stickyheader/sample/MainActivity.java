@@ -73,9 +73,12 @@ public class MainActivity extends AppCompatActivity {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             if (viewType == NORMAL) {
                 View view = new NormalView(parent.getContext());
+                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new TextViewHolder(view);
             } else {
                 View view = new HeaderView(parent.getContext());
+                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
                 return new HeaderViewHolder(view);
             }
         }
