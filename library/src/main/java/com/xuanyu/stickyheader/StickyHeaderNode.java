@@ -18,17 +18,17 @@ public class StickyHeaderNode<T> {
 
     private StickyHeaderNode<T> mPrevNode;//记录上一个吸顶的Node
 
-    private IStickyHeaderModel<T> mModel;
+    private BaseStickyHeaderModel<T> mModel;
 
     public void setPrevNode(StickyHeaderNode<T> prevNode) {
         this.mPrevNode = prevNode;
     }
 
-    public IStickyHeaderModel<T> getStickyHeaderModel() {
+    public BaseStickyHeaderModel<T> getStickyHeaderModel() {
         return mModel;
     }
 
-    public void setStickyHeaderModel(IStickyHeaderModel<T> model) {
+    public void setStickyHeaderModel(BaseStickyHeaderModel<T> model) {
         this.mModel = model;
     }
 

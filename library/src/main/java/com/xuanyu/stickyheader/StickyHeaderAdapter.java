@@ -12,5 +12,5 @@ package com.xuanyu.stickyheader;
 public interface StickyHeaderAdapter<T> {
     T getItem(int position);
 
-    IStickyHeaderModel<T> transferToStickyHeaderModel(int position);
+    BaseStickyHeaderModel<T> transferToStickyHeaderModel(int position);
 }

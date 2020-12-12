@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.xuanyu.stickyheader.IStickyHeaderModel;
+import com.xuanyu.stickyheader.BaseStickyHeaderModel;
 import com.xuanyu.stickyheader.StickyHeaderAdapter;
 import com.xuanyu.stickyheader.StickyHeaderHelper;
 import com.xuanyu.stickyheader.StickyHeaderRegistry;
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         mRecyclerView.setAdapter(new TextAdapter(models));
+
         StickyHeaderHelper.init(mRecyclerView, 0, mHeaderLayout);
         StickyHeaderRegistry.registerTransfer(HeaderStringModel.class, StickyModel.class);
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public IStickyHeaderModel<TextModel> transferToStickyHeaderModel(int position) {
+        public BaseStickyHeaderModel<TextModel> transferToStickyHeaderModel(int position) {
             return StickyHeaderHelper.transferToStickyHeaderModel(this, position);
         }
 

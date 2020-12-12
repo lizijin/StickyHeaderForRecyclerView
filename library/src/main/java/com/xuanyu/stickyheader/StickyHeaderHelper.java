@@ -38,7 +38,7 @@ public class StickyHeaderHelper {
      * @param <T>
      * @return
      */
-    public static <T> IStickyHeaderModel<T> transferToStickyHeaderModel(StickyHeaderAdapter<T> stickyHeaderAdapter, int position) {
+    public static <T> BaseStickyHeaderModel<T> transferToStickyHeaderModel(StickyHeaderAdapter<T> stickyHeaderAdapter, int position) {
         T item = stickyHeaderAdapter.getItem(position);
         System.out.println("RecyclerViewAdapter postion " + position + " item " + item.getClass());
         if (StickyHeaderRegistry.isExclude(item.getClass())) {
@@ -47,8 +47,8 @@ public class StickyHeaderHelper {
         Class clazz = StickyHeaderRegistry.getClazz(item.getClass());
         if (clazz == null) return null;
         System.out.println("RecyclerViewAdapter clazz " + clazz.getSimpleName());
-//            IStickyHeaderModel<T> iStickyHeaderModel = ((IStickyHeaderModel<T>) clazz.newInstance());
-        IStickyHeaderModel<T> iStickyHeaderModel = StickyHeaderModelPool.obtain(clazz);
+//            BaseStickyHeaderModel<T> iStickyHeaderModel = ((BaseStickyHeaderModel<T>) clazz.newInstance());
+        BaseStickyHeaderModel<T> iStickyHeaderModel = StickyHeaderModelPool.obtain(clazz);
         iStickyHeaderModel.setRecyclerViewItemModel(item);
         return iStickyHeaderModel;
     }

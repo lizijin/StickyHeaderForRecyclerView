@@ -12,13 +12,13 @@ package com.xuanyu.stickyheader;
 import java.util.HashMap;
 
 public class StickyHeaderModelPool {
-    private final static HashMap<Class<IStickyHeaderModel<?>>, Pools.SynchronizedPool<IStickyHeaderModel<?>>> sPools = new HashMap<>();
+    private final static HashMap<Class<BaseStickyHeaderModel<?>>, Pools.SynchronizedPool<BaseStickyHeaderModel<?>>> sPools = new HashMap<>();
 
-    public static IStickyHeaderModel<?> obtain(Class<IStickyHeaderModel<?>> clazz) {
+    public static BaseStickyHeaderModel<?> obtain(Class<BaseStickyHeaderModel<?>> clazz) {
         if (sPools.get(clazz) == null) {
-            sPools.put(clazz, new Pools.SynchronizedPool<IStickyHeaderModel<?>>(20));
+            sPools.put(clazz, new Pools.SynchronizedPool<BaseStickyHeaderModel<?>>(20));
         }
-        IStickyHeaderModel<?> stickyHeaderModel = sPools.get(clazz).acquire();
+        BaseStickyHeaderModel<?> stickyHeaderModel = sPools.get(clazz).acquire();
         if (stickyHeaderModel != null) {
             System.out.println("StickyHeaderModelPool -- 从缓存中获取");
             return stickyHeaderModel;
@@ -35,7 +35,7 @@ public class StickyHeaderModelPool {
         return null;
     }
 
-    public static void recycle( IStickyHeaderModel<?> stickyHeaderModel) {
+    public static void recycle( BaseStickyHeaderModel<?> stickyHeaderModel) {
         Class clazz = stickyHeaderModel.getClass();
         System.out.println("StickyHeaderModelPool -- recycle "+clazz);
 

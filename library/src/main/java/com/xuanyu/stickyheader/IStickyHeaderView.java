@@ -20,11 +20,6 @@ public interface IStickyHeaderView<T> {
      */
     int getItemViewTop();
 
-    /**
-     * 孵化出一个纯粹的接口对象。因为该接口是会被RecyclerView上的ItemView实现。需要将View 和数据剥离开
-     * @return
-     */
-    IStickyHeaderView incubate();
 
     void setData(T t);
 

@@ -24,10 +24,6 @@ public class HeaderView extends FrameLayout implements IStickyHeaderView<HeaderS
         return getTop();
     }
 
-    @Override
-    public IStickyHeaderView incubate() {
-        return this;
-    }
 
     @Override
     public void setData(HeaderStringModel headerStringModel) {

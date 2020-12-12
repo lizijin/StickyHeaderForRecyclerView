@@ -9,7 +9,6 @@
 
 package com.xuanyu.stickyheader;
 
-import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,11 +41,11 @@ public class StickyHeaderRegistry {
     private static HashMap<Class, Class> sTransferMap = new HashMap<>();
     private static HashSet<Class> sExcludeTypeMap = new HashSet<>();
 
-    public static <T> void registerTransfer(Class<T> fromClazz, Class<? extends IStickyHeaderModel<T>> toClazz) {
+    public static <T> void registerTransfer(Class<T> fromClazz, Class<? extends BaseStickyHeaderModel<T>> toClazz) {
         sTransferMap.put(fromClazz, toClazz);
     }
 
-    public static <T> Class<? extends IStickyHeaderModel<T>> getClazz(Class<T> fromClazz) {
+    public static <T> Class<? extends BaseStickyHeaderModel<T>> getClazz(Class<T> fromClazz) {
         return sTransferMap.get(fromClazz);
     }
 
@@ -60,11 +59,11 @@ public class StickyHeaderRegistry {
 
     private static HashMap<Class, IStickyHeaderView<?>> sViews = new HashMap<>();
 
-    public static void putView(Class clazz, IStickyHeaderView<?> view) {
+    static void putView(Class clazz, IStickyHeaderView<?> view) {
         sViews.put(clazz, view);
     }
 
-    public static IStickyHeaderView<?> getView(Class clazz) {
+    static IStickyHeaderView<?> getView(Class clazz) {
         return sViews.get(clazz);
     }
 

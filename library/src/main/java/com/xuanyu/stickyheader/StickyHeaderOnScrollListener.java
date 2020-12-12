@@ -137,7 +137,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             mIsNeighbour = false;
             return;
         }
-        IStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView);
+        BaseStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView);
         if (nextStickyHeaderModel != null && mIsNeighbour && (nextStickyHeaderModel.getRecyclerVIewItem().getItemViewTop() >= mStickyHeaderLayoutTop && nextStickyHeaderModel.getRecyclerVIewItem().getItemViewTop() <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getHeight() - dy))) {
             int wannaTop = Math.min(mStickyHeaderLayoutTop, nextStickyHeaderModel.getRecyclerVIewItem().getItemViewTop() - mStickyHeaderLayout.getHeight());
 
@@ -148,7 +148,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             if (nextStickyHeaderModel != null) {
                 StickyHeaderModelPool.recycle(nextStickyHeaderModel);
             }
-            IStickyHeaderModel<T> currentStickyHeaderModel = findCurrentStickyHeaderModel(recyclerView);
+            BaseStickyHeaderModel<T> currentStickyHeaderModel = findCurrentStickyHeaderModel(recyclerView);
 
             if (currentStickyHeaderModel == null) {
                 return;
@@ -186,7 +186,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
      */
     private void stickyHeaderTop(RecyclerView recyclerView, int dy) {
         mIsNeighbour = false;
-        IStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView);
+        BaseStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView);
         if (nextStickyHeaderModel == null) return;
 
         if (nextStickyHeaderModel.getRecyclerVIewItem().getItemViewTop() < mStickyHeaderLayoutTop) {
@@ -231,7 +231,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
      * @param recyclerView
      * @return
      */
-    private IStickyHeaderModel<T> findCurrentStickyHeaderModel(RecyclerView recyclerView) {
+    private BaseStickyHeaderModel<T> findCurrentStickyHeaderModel(RecyclerView recyclerView) {
         if (mCurrentStickyHeaderNode == null) return null;
         final int childCount = recyclerView.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -242,11 +242,11 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                 continue;
             }
             StickyHeaderAdapter<T> adapter = ((StickyHeaderAdapter<T>) recyclerView.getAdapter());
-            IStickyHeaderModel<T> stickyHeaderModel = adapter.transferToStickyHeaderModel(adapterPosition);
+            BaseStickyHeaderModel<T> stickyHeaderModel = adapter.transferToStickyHeaderModel(adapterPosition);
             if (stickyHeaderModel == null) {
                 continue;
             }
-            stickyHeaderModel.setRecyclerViewItemView(((IStickyHeaderView) child).incubate());
+            stickyHeaderModel.setRecyclerViewItemView(((IStickyHeaderView) child));
 
             T recyclerViewItemModel = adapter.getItem(adapterPosition);
 
@@ -266,7 +266,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
      * @param recyclerView
      * @return
      */
-    private IStickyHeaderModel<T> findNextStickyHeaderModel(RecyclerView recyclerView) {
+    private BaseStickyHeaderModel<T> findNextStickyHeaderModel(RecyclerView recyclerView) {
         final int childCount = recyclerView.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = recyclerView.getChildAt(i);
@@ -275,14 +275,14 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                 continue;
             }
             StickyHeaderAdapter<T> stickyHeaderAdapter = (StickyHeaderAdapter<T>) recyclerView.getAdapter();
-            IStickyHeaderModel<T> stickyHeaderModel = stickyHeaderAdapter.transferToStickyHeaderModel(adapterPosition);
+            BaseStickyHeaderModel<T> stickyHeaderModel = stickyHeaderAdapter.transferToStickyHeaderModel(adapterPosition);
             if (stickyHeaderModel == null) {
                 continue;
             }
             if (!(child instanceof IStickyHeaderView)) {
                 throw new IllegalStateException(child.getClass().getName() + " 必须实现IStickyHeaderView 接口");
             }
-            stickyHeaderModel.setRecyclerViewItemView(((IStickyHeaderView) child).incubate());
+            stickyHeaderModel.setRecyclerViewItemView(((IStickyHeaderView) child));
             T recyclerViewItemModel = stickyHeaderAdapter.getItem(adapterPosition);
             if (mCurrentStickyHeaderNode == null || !mCurrentStickyHeaderNode.getStickyHeaderModel().getRecyclerViewItemModel().equals(recyclerViewItemModel)) {
                 return stickyHeaderModel;
@@ -331,7 +331,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         int itemCount = ((RecyclerView.Adapter) mAdapter).getItemCount();
         System.out.println("rebuildStickyHeader itemCount = " + itemCount);
 
-        IStickyHeaderModel<T> stickyHeaderModel = null;
+        BaseStickyHeaderModel<T> stickyHeaderModel = null;
         for (int i = position; i >= 0; i--) {
             stickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, i);
             if (stickyHeaderModel != null) break;
@@ -373,7 +373,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
     public void resetStickyHeaderNode() {
         while (mCurrentStickyHeaderNode != null) {
-            IStickyHeaderModel<T> stickyHeaderModel = mCurrentStickyHeaderNode.getStickyHeaderModel();
+            BaseStickyHeaderModel<T> stickyHeaderModel = mCurrentStickyHeaderNode.getStickyHeaderModel();
             mCurrentStickyHeaderNode.setStickyHeaderModel(null);
             System.out.println("StickyHeaderModelPool -- recycle");
             StickyHeaderModelPool.recycle(stickyHeaderModel);
@@ -386,7 +386,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     public void rebuildStickyHeadNode(int position) {
         StickyHeaderNode<T> nextNode = null;
         for (int index = position; index >= 0; index--) {
-            IStickyHeaderModel<T> stickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, index);
+            BaseStickyHeaderModel<T> stickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, index);
             if (stickyHeaderModel == null) continue;
             StickyHeaderNode<T> stickyHeaderNode = new StickyHeaderNode();
             stickyHeaderNode.setStickyHeaderModel(stickyHeaderModel);
