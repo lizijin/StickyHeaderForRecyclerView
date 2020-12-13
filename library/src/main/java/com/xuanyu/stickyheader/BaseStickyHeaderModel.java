@@ -2,6 +2,8 @@ package com.xuanyu.stickyheader;
 
 import android.content.Context;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 public abstract class BaseStickyHeaderModel<T>  {
     // 当前吸顶Model对应RecyclerView上的Model
     private T mRecyclerViewItemModel;
@@ -25,11 +27,11 @@ public abstract class BaseStickyHeaderModel<T>  {
         return this.mRecyclerViewItemView;
     }
 
-    IStickyHeaderView<T> createIfAbsent(Context context, Class clazz) {
-        IStickyHeaderView<T> iStickyHeaderView = (IStickyHeaderView<T>) StickyHeaderRegistry.getView(clazz);
+    IStickyHeaderView<T> createIfAbsent(RecyclerView recyclerView,Context context, Class clazz) {
+        IStickyHeaderView<T> iStickyHeaderView = (IStickyHeaderView<T>) StickyHeaderRegistry.getView(recyclerView,clazz);
         if (iStickyHeaderView == null) {
             iStickyHeaderView = getStickyView(context);
-            StickyHeaderRegistry.putView(clazz, iStickyHeaderView);
+            StickyHeaderRegistry.putView(recyclerView,clazz, iStickyHeaderView);
         }
         return iStickyHeaderView;
     }

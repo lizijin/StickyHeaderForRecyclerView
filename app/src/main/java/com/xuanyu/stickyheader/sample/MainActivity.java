@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         List<TextModel> models = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            models.add(new NormalStringModel("Normal Item " + i));
             if (i % 10 == 0) {
                 models.add(new HeaderStringModel("Header Item " + i));
 
             }
+            models.add(new NormalStringModel("Normal Item " + i));
+
         }
         mRecyclerView.setAdapter(new TextAdapter(models));
 

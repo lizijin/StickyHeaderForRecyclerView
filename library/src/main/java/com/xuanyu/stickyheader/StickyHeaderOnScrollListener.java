@@ -169,9 +169,9 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                     System.out.println("jiangbin stickyHeaderBottom 33333");
                     mIsNeighbour = true;
                     mStickyHeaderLayout.setVisibility(VISIBLE);
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass())) {
+                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass())) {
                         mStickyHeaderLayout.removeAllViews();
-                        mStickyHeaderLayout.addView((View) mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(recyclerView.getContext(), mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel().getClass()));
+                        mStickyHeaderLayout.addView((View) mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView,recyclerView.getContext(), mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel().getClass()));
                     }
                     ///11111
                     ((IStickyHeaderView<T>) mStickyHeaderLayout.getChildAt(0)).setData(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel());
@@ -204,7 +204,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
             //吸顶View对应的数据类的Class
             Class<?> recyclerViewItemModelClazz = recyclerViewItemModel.getClass();
-            View stickyHeaderView = (View) nextStickyHeaderModel.createIfAbsent(recyclerView.getContext(), recyclerViewItemModelClazz);
+            View stickyHeaderView = (View) nextStickyHeaderModel.createIfAbsent(mRecyclerView,recyclerView.getContext(), recyclerViewItemModelClazz);
             if (mCurrentStickyHeaderNode == null) {
                 //如果当前没有吸顶的View。直接设置可见，并add到viewGroup中
                 mStickyHeaderLayout.setVisibility(VISIBLE);
@@ -212,13 +212,13 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                     mStickyHeaderLayout.addView(stickyHeaderView);
                 } else {
                     //当吸顶的类型变了，需要重新addView
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(recyclerViewItemModelClazz)) {
+                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,recyclerViewItemModelClazz)) {
                         mStickyHeaderLayout.removeAllViews();
                         mStickyHeaderLayout.addView(stickyHeaderView);
                     }
                 }
             } else {
-                if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(recyclerViewItemModelClazz)) {
+                if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,recyclerViewItemModelClazz)) {
                     mStickyHeaderLayout.removeAllViews();
                     mStickyHeaderLayout.addView(stickyHeaderView);
                 }
@@ -365,11 +365,11 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         }
         ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
         if (mStickyHeaderLayout.getChildCount() == 0) {
-            mStickyHeaderLayout.addView((View) stickyHeaderModel.createIfAbsent(mRecyclerView.getContext(), stickyHeaderModel.getRecyclerViewItemModel().getClass()));
+            mStickyHeaderLayout.addView((View) stickyHeaderModel.createIfAbsent(mRecyclerView,mRecyclerView.getContext(), stickyHeaderModel.getRecyclerViewItemModel().getClass()));
         } else {
-            if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(stickyHeaderModel.getClass())) {
+            if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,stickyHeaderModel.getClass())) {
                 mStickyHeaderLayout.removeAllViews();
-                mStickyHeaderLayout.addView((View) stickyHeaderModel.createIfAbsent(mRecyclerView.getContext(), stickyHeaderModel.getRecyclerViewItemModel().getClass()));
+                mStickyHeaderLayout.addView((View) stickyHeaderModel.createIfAbsent(mRecyclerView,mRecyclerView.getContext(), stickyHeaderModel.getRecyclerViewItemModel().getClass()));
             }
             ((IStickyHeaderView<T>) mStickyHeaderLayout.getChildAt(0)).setData(stickyHeaderModel.getRecyclerViewItemModel());
 

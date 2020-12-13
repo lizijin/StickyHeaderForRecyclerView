@@ -57,14 +57,19 @@ public class StickyHeaderRegistry {
         return sExcludeTypeMap.contains(clazz);
     }
 
-    private static HashMap<Class, IStickyHeaderView<?>> sViews = new HashMap<>();
+    private static WeakHashMap<RecyclerView, HashMap<Class, IStickyHeaderView<?>>> sViews = new WeakHashMap<>();
 
-    static void putView(Class clazz, IStickyHeaderView<?> view) {
-        sViews.put(clazz, view);
+    static void putView(RecyclerView recyclerView, Class clazz, IStickyHeaderView<?> view) {
+        HashMap<Class, IStickyHeaderView<?>> hashMap = sViews.get(recyclerView);
+        if (hashMap == null) {
+            hashMap = new HashMap<>();
+        }
+        hashMap.put(clazz, view);
     }
 
-    static IStickyHeaderView<?> getView(Class clazz) {
-        return sViews.get(clazz);
+    static IStickyHeaderView<?> getView(RecyclerView recyclerView, Class clazz) {
+        if (sViews.get(recyclerView) == null) return null;
+        return sViews.get(recyclerView).get(clazz);
     }
 
 }
