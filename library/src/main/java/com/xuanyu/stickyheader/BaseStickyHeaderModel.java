@@ -21,7 +21,7 @@ public abstract class BaseStickyHeaderModel<T>  {
         this.mRecyclerViewItemView = recyclerViewItemView;
     }
 
-    public IStickyHeaderView<T> getRecyclerVIewItem() {
+    public IStickyHeaderView<T> getRecyclerViewItem() {
         return this.mRecyclerViewItemView;
     }
 
