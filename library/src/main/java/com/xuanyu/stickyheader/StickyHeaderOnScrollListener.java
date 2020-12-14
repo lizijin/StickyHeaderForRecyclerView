@@ -170,10 +170,9 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                     System.out.println("jiangbin stickyHeaderBottom 33333");
                     mIsNeighbour = true;
 //                    mStickyHeaderLayout.setVisibility(VISIBLE);
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel().getClass())) {
-                        mStickyHeaderLayout.removeAllViews();
-                        mStickyHeaderLayout.addView(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, recyclerView.getContext()));
-                    }
+                    View newStickyView = mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, mRecyclerView.getContext());
+                    addStickyView(newStickyView);
+                    ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
                     ///11111
                     mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().onBindView();
                 }
@@ -207,23 +206,12 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             //吸顶View对应的数据类的Class
             Class<?> recyclerViewItemModelClazz = recyclerViewItemModel.getClass();
             View stickyHeaderView = nextStickyHeaderModel.createIfAbsent(mRecyclerView, recyclerView.getContext());
+
+            addStickyView(stickyHeaderView);
             if (mCurrentStickyHeaderNode == null) {
                 //如果当前没有吸顶的View。直接设置可见，并add到viewGroup中
                 mStickyHeaderLayout.setVisibility(VISIBLE);
-                if (mStickyHeaderLayout.getChildCount() == 0) {
-                    mStickyHeaderLayout.addView(stickyHeaderView);
-                } else {
-                    //当吸顶的类型变了，需要重新addView
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, recyclerViewItemModelClazz)) {
-                        mStickyHeaderLayout.removeAllViews();
-                        mStickyHeaderLayout.addView(stickyHeaderView);
-                    }
-                }
             } else {
-                if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, recyclerViewItemModelClazz)) {
-                    mStickyHeaderLayout.removeAllViews();
-                    mStickyHeaderLayout.addView(stickyHeaderView);
-                }
                 //如果当前有吸顶的View。将mStickyHeaderLayout重置回来
                 ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
             }
@@ -435,4 +423,39 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             return view.getTop();
         }
     }
+
+    //    private View getCurrentStickyView() {
+//        for (int i = 0; i < mStickyHeaderLayout.getChildCount(); i++) {
+//            View child = mStickyHeaderLayout.getChildAt(i);
+//            if (child.getVisibility() == VISIBLE) return child;
+//        }
+//        return null;
+//    }
+//
+    private boolean stickyLayoutContains(View view) {
+        for (int i = 0; i < mStickyHeaderLayout.getChildCount(); i++) {
+            View child = mStickyHeaderLayout.getChildAt(i);
+            if (child == view) return true;
+        }
+        return false;
+    }
+
+    private void onlyShowStickyView(View view) {
+        for (int i = 0; i < mStickyHeaderLayout.getChildCount(); i++) {
+            View child = mStickyHeaderLayout.getChildAt(i);
+            if (child == view) {
+                child.setVisibility(VISIBLE);
+            } else {
+                child.setVisibility(View.GONE);
+            }
+        }
+    }
+    private void addStickyView(View view) {
+        if (!stickyLayoutContains(view)) {
+            mStickyHeaderLayout.addView(view);
+        }
+        onlyShowStickyView(view);
+    }
+
+
 }

@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
 
 
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         public TextAdapter(List<TextModel> textModels) {
             this.mTextModels = textModels;
+
         }
 
         @Override
