@@ -172,7 +172,14 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 //                    mStickyHeaderLayout.setVisibility(VISIBLE);
                     View newStickyView = mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, mRecyclerView.getContext());
                     addStickyView(newStickyView);
-                    ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
+                    mStickyHeaderLayout.setAlpha(0);
+                    newStickyView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mStickyHeaderLayout.setAlpha(1);
+                            ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
+                        }
+                    });
                     ///11111
                     mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().onBindView();
                 }
@@ -450,6 +457,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             }
         }
     }
+
     private void addStickyView(View view) {
         if (!stickyLayoutContains(view)) {
             mStickyHeaderLayout.addView(view);
