@@ -170,7 +170,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                     System.out.println("jiangbin stickyHeaderBottom 33333");
                     mIsNeighbour = true;
 //                    mStickyHeaderLayout.setVisibility(VISIBLE);
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass())) {
+                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel().getClass())) {
                         mStickyHeaderLayout.removeAllViews();
                         mStickyHeaderLayout.addView(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, recyclerView.getContext()));
                     }
@@ -367,7 +367,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         if (mStickyHeaderLayout.getChildCount() == 0) {
             mStickyHeaderLayout.addView(stickyHeaderModel.createIfAbsent(mRecyclerView, mRecyclerView.getContext()));
         } else {
-            if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, stickyHeaderModel.getClass())) {
+            if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, stickyHeaderModel.getRecyclerViewItemModel().getClass())) {
                 mStickyHeaderLayout.removeAllViews();
                 mStickyHeaderLayout.addView(stickyHeaderModel.createIfAbsent(mRecyclerView, mRecyclerView.getContext()));
             }
