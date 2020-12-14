@@ -37,7 +37,24 @@ public class MainActivity extends AppCompatActivity {
         List<TextModel> models = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             if (i % 10 == 0) {
-                models.add(new HeaderStringModel("Header Item " + i));
+                if ((i / 10) % 2 == 0) {
+                    models.add(new HeaderStringModelImplSticky("Header Sticky Item " + i));
+                } else {
+                    models.add(new HeaderStringModel("Header  Item " + i));
+
+                }
+            }
+            models.add(new NormalStringModel("Normal Item " + i));
+
+        }
+        for (int i = 100; i < 200; i++) {
+            if (i % 10 == 0) {
+                if ((i / 10) % 2 == 0) {
+                    models.add(new HeaderStringModelImplSticky("Header Sticky Item " + i));
+                } else {
+                    models.add(new HeaderStringModel("Header  Item " + i));
+
+                }
 
             }
             models.add(new NormalStringModel("Normal Item " + i));
@@ -46,14 +63,18 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new TextAdapter(models));
 
         StickyHeaderHelper.init(mRecyclerView, 0, mHeaderLayout);
-        StickyHeaderRegistry.registerTransfer(HeaderStringModel.class, StickyModel.class);
+        StickyHeaderRegistry.registerTransfer(HeaderStringModelImplSticky.class, StickyModel.class);
+        StickyHeaderRegistry.registerTransfer(HeaderStringModel.class, StickyModel2.class);
+
 
     }
 
     private static class TextAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyHeaderAdapter<TextModel> {
         private List<TextModel> mTextModels;
         public static final int NORMAL = 0;
-        public static final int HEAD = 1;
+        public static final int HEAD_IMPL_STICKY = 1;
+        public static final int HEAD = 2;
+
 
         public TextAdapter(List<TextModel> textModels) {
             this.mTextModels = textModels;
@@ -77,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
                 View view = new NormalView(parent.getContext());
                 view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new TextViewHolder(view);
+            } else if (viewType == HEAD_IMPL_STICKY) {
+                View view = new HeaderViewImplSticky(parent.getContext());
+                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                return new HeaderViewImplStickyHolder(view);
             } else {
                 View view = new HeaderView(parent.getContext());
                 view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -89,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof TextViewHolder) {
                 ((NormalView) holder.itemView).mTextView.setText(mTextModels.get(position).getText());
-            } else {
+            } else if (holder instanceof HeaderViewImplStickyHolder) {
+                ((HeaderViewImplSticky) holder.itemView).setData((HeaderStringModelImplSticky) mTextModels.get(position));
+            } else if (holder instanceof HeaderViewHolder) {
                 ((HeaderView) holder.itemView).setData((HeaderStringModel) mTextModels.get(position));
             }
         }
@@ -98,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         public int getItemViewType(int position) {
             TextModel textModel = mTextModels.get(position);
             if (textModel instanceof NormalStringModel) return NORMAL;
+            if (textModel instanceof HeaderStringModelImplSticky) return HEAD_IMPL_STICKY;
             return HEAD;
         }
 
@@ -111,6 +140,14 @@ public class MainActivity extends AppCompatActivity {
         private TextView mTextView;
 
         public TextViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
+    private static class HeaderViewImplStickyHolder extends RecyclerView.ViewHolder {
+        private TextView mTextView;
+
+        public HeaderViewImplStickyHolder(@NonNull View itemView) {
             super(itemView);
         }
     }

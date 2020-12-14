@@ -9,18 +9,24 @@ import androidx.annotation.NonNull;
 
 import com.xuanyu.stickyheader.IStickyHeaderView;
 
-public class HeaderView extends FrameLayout   {
+public class HeaderViewImplSticky extends FrameLayout implements IStickyHeaderView<HeaderStringModelImplSticky> {
    private TextView mTextView;
-    public HeaderView(@NonNull Context context) {
+    public HeaderViewImplSticky(@NonNull Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.item_header_no_sticky,this);
+        LayoutInflater.from(context).inflate(R.layout.item_header,this);
         mTextView = findViewById(R.id.header_text);
     }
 
 
 
+    @Override
+    public int getItemViewTop() {
+        return getTop();
+    }
 
-    public void setData(HeaderStringModel headerStringModel) {
+
+    @Override
+    public void setData(HeaderStringModelImplSticky headerStringModel) {
         mTextView.setText(headerStringModel.getText());
     }
 }

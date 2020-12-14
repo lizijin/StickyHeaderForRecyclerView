@@ -5,17 +5,17 @@ import android.view.View;
 
 import com.xuanyu.stickyheader.BaseStickyHeaderModel;
 
-public class StickyModel extends BaseStickyHeaderModel<HeaderStringModelImplSticky> {
+public class StickyModel2 extends BaseStickyHeaderModel<HeaderStringModel> {
 
     @Override
     public View getStickyView(Context context) {
         System.out.println("jiangbin getView");
-        HeaderViewImplSticky headerView = new HeaderViewImplSticky(context);
+        HeaderView headerView = new HeaderView(context);
         return headerView;
     }
 
     @Override
-    public void onBindView(View view, HeaderStringModelImplSticky data) {
-
+    public void onBindView(View view, HeaderStringModel data) {
+        ((HeaderView) view).setData(data);
     }
 }

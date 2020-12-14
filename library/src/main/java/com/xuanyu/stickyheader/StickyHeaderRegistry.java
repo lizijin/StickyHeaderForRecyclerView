@@ -10,6 +10,8 @@
 package com.xuanyu.stickyheader;
 
 
+import android.view.View;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
@@ -57,17 +59,18 @@ public class StickyHeaderRegistry {
         return sExcludeTypeMap.contains(clazz);
     }
 
-    private static WeakHashMap<RecyclerView, HashMap<Class, IStickyHeaderView<?>>> sViews = new WeakHashMap<>();
+    private static WeakHashMap<RecyclerView, HashMap<Class, View>> sViews = new WeakHashMap<>();
 
-    static void putView(RecyclerView recyclerView, Class clazz, IStickyHeaderView<?> view) {
-        HashMap<Class, IStickyHeaderView<?>> hashMap = sViews.get(recyclerView);
+    static void putView(RecyclerView recyclerView, Class clazz, View view) {
+        HashMap<Class, View> hashMap = sViews.get(recyclerView);
         if (hashMap == null) {
             hashMap = new HashMap<>();
+            sViews.put(recyclerView, hashMap);
         }
         hashMap.put(clazz, view);
     }
 
-    static IStickyHeaderView<?> getView(RecyclerView recyclerView, Class clazz) {
+    static View getView(RecyclerView recyclerView, Class clazz) {
         if (sViews.get(recyclerView) == null) return null;
         return sViews.get(recyclerView).get(clazz);
     }

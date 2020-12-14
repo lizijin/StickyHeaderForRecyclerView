@@ -1,40 +1,57 @@
 package com.xuanyu.stickyheader;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class BaseStickyHeaderModel<T>  {
+public abstract class BaseStickyHeaderModel<T> {
     // 当前吸顶Model对应RecyclerView上的Model
     private T mRecyclerViewItemModel;
 
     // 当前吸顶Model对应RecyclerView上的View
-    private IStickyHeaderView<T> mRecyclerViewItemView;
+    private View mRecyclerViewItemView;
+
+
+    private View mStickyView;
 
     public T getRecyclerViewItemModel() {
         return mRecyclerViewItemModel;
     }
 
-    public void setRecyclerViewItemModel(T data) {
+      void setRecyclerViewItemModel(T data) {
         this.mRecyclerViewItemModel = data;
     }
 
-    public void setRecyclerViewItemView(IStickyHeaderView<T> recyclerViewItemView) {
+    public void setRecyclerViewItemView(View recyclerViewItemView) {
         this.mRecyclerViewItemView = recyclerViewItemView;
     }
 
-    public IStickyHeaderView<T> getRecyclerViewItem() {
+    public View getRecyclerViewItemView() {
         return this.mRecyclerViewItemView;
     }
 
-    IStickyHeaderView<T> createIfAbsent(RecyclerView recyclerView,Context context, Class clazz) {
-        IStickyHeaderView<T> iStickyHeaderView = (IStickyHeaderView<T>) StickyHeaderRegistry.getView(recyclerView,clazz);
+    View createIfAbsent(RecyclerView recyclerView, Context context) {
+        Class<?> clazz = mRecyclerViewItemModel.getClass();
+        View iStickyHeaderView = StickyHeaderRegistry.getView(recyclerView, clazz);
         if (iStickyHeaderView == null) {
             iStickyHeaderView = getStickyView(context);
-            StickyHeaderRegistry.putView(recyclerView,clazz, iStickyHeaderView);
+            StickyHeaderRegistry.putView(recyclerView, clazz, iStickyHeaderView);
         }
+        mStickyView = iStickyHeaderView;
         return iStickyHeaderView;
     }
 
-    public abstract IStickyHeaderView<T> getStickyView(Context context);
+    public abstract View getStickyView(Context context);
+
+    public abstract void onBindView(View stickyView, T data);
+
+
+    public void onBindView() {
+        if (mStickyView instanceof IStickyHeaderView) {
+            ((IStickyHeaderView) mStickyView).setData(getRecyclerViewItemModel());
+        } else {
+            onBindView(mStickyView, getRecyclerViewItemModel());
+        }
+    }
 }

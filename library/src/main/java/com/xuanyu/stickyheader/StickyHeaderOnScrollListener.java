@@ -138,10 +138,11 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             return;
         }
         BaseStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView);
-        if (nextStickyHeaderModel != null && mIsNeighbour && (nextStickyHeaderModel.getRecyclerViewItem().getItemViewTop() >= mStickyHeaderLayoutTop && nextStickyHeaderModel.getRecyclerViewItem().getItemViewTop() <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getHeight() - dy))) {
+        View recyclerViewItemView = null;
+        if (nextStickyHeaderModel != null && ((recyclerViewItemView = nextStickyHeaderModel.getRecyclerViewItemView()) != null) && mIsNeighbour && (getItemViewTop(recyclerViewItemView) >= mStickyHeaderLayoutTop && getItemViewTop(recyclerViewItemView) <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getHeight() - dy))) {
             //紧相连状态
             System.out.println("jiangbin stickyHeaderBottom 11111");
-            int wannaTop = Math.min(mStickyHeaderLayoutTop, nextStickyHeaderModel.getRecyclerViewItem().getItemViewTop() - mStickyHeaderLayout.getHeight());
+            int wannaTop = Math.min(mStickyHeaderLayoutTop, getItemViewTop(recyclerViewItemView) - mStickyHeaderLayout.getHeight());
 
             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
 
@@ -161,20 +162,20 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             mIsNeighbour = false;
 
             //当前吸顶View 不吸顶了
-            if (currentStickyHeaderModel.getRecyclerViewItem().getItemViewTop() > mStickyHeaderLayoutTop) {
+            if (getItemViewTop(currentStickyHeaderModel.getRecyclerViewItemView()) > mStickyHeaderLayoutTop) {
                 if (mCurrentStickyHeaderNode.getPrevNode() == null) {
                     //前面没有吸顶的View了
                     mStickyHeaderLayout.setVisibility(View.GONE);
                 } else {
                     System.out.println("jiangbin stickyHeaderBottom 33333");
                     mIsNeighbour = true;
-                    mStickyHeaderLayout.setVisibility(VISIBLE);
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass())) {
+//                    mStickyHeaderLayout.setVisibility(VISIBLE);
+                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass())) {
                         mStickyHeaderLayout.removeAllViews();
-                        mStickyHeaderLayout.addView((View) mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView,recyclerView.getContext(), mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel().getClass()));
+                        mStickyHeaderLayout.addView(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, recyclerView.getContext()));
                     }
                     ///11111
-                    ((IStickyHeaderView<T>) mStickyHeaderLayout.getChildAt(0)).setData(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getRecyclerViewItemModel());
+                    mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().onBindView();
                 }
                 StickyHeaderNode<T> prevTemp = mCurrentStickyHeaderNode.getPrevNode();
                 mCurrentStickyHeaderNode.setPrevNode(null);
@@ -198,13 +199,14 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         if (nextStickyHeaderModel == null) return;
 
         //下一个可能需要吸顶的View 进入吸顶状态
-        if (nextStickyHeaderModel.getRecyclerViewItem().getItemViewTop() < mStickyHeaderLayoutTop) {
+        View nextStickyItemView = nextStickyHeaderModel.getRecyclerViewItemView();
+        if (getItemViewTop(nextStickyItemView) < mStickyHeaderLayoutTop) {
 
             T recyclerViewItemModel = nextStickyHeaderModel.getRecyclerViewItemModel();
 
             //吸顶View对应的数据类的Class
             Class<?> recyclerViewItemModelClazz = recyclerViewItemModel.getClass();
-            View stickyHeaderView = (View) nextStickyHeaderModel.createIfAbsent(mRecyclerView,recyclerView.getContext(), recyclerViewItemModelClazz);
+            View stickyHeaderView = nextStickyHeaderModel.createIfAbsent(mRecyclerView, recyclerView.getContext());
             if (mCurrentStickyHeaderNode == null) {
                 //如果当前没有吸顶的View。直接设置可见，并add到viewGroup中
                 mStickyHeaderLayout.setVisibility(VISIBLE);
@@ -212,28 +214,28 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                     mStickyHeaderLayout.addView(stickyHeaderView);
                 } else {
                     //当吸顶的类型变了，需要重新addView
-                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,recyclerViewItemModelClazz)) {
+                    if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, recyclerViewItemModelClazz)) {
                         mStickyHeaderLayout.removeAllViews();
                         mStickyHeaderLayout.addView(stickyHeaderView);
                     }
                 }
             } else {
-                if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,recyclerViewItemModelClazz)) {
+                if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, recyclerViewItemModelClazz)) {
                     mStickyHeaderLayout.removeAllViews();
                     mStickyHeaderLayout.addView(stickyHeaderView);
                 }
                 //如果当前有吸顶的View。将mStickyHeaderLayout重置回来
                 ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
             }
-            ((IStickyHeaderView<T>) mStickyHeaderLayout.getChildAt(0)).setData(recyclerViewItemModel);
+            nextStickyHeaderModel.onBindView();
             StickyHeaderNode<T> stickyHeaderNode = new StickyHeaderNode();
             stickyHeaderNode.setStickyHeaderModel(nextStickyHeaderModel);
             stickyHeaderNode.setPrevNode(mCurrentStickyHeaderNode);
             mCurrentStickyHeaderNode = stickyHeaderNode;
-        } else if (nextStickyHeaderModel.getRecyclerViewItem().getItemViewTop() <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getHeight())) {
+        } else if (getItemViewTop(nextStickyItemView) <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getHeight())) {
             //紧相邻
 
-            int wannaTop = nextStickyHeaderModel.getRecyclerViewItem().getItemViewTop() - mStickyHeaderLayout.getHeight();
+            int wannaTop = getItemViewTop(nextStickyItemView) - mStickyHeaderLayout.getHeight();
 
             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());
             mIsNeighbour = true;
@@ -264,7 +266,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             if (stickyHeaderModel == null) {
                 continue;
             }
-            stickyHeaderModel.setRecyclerViewItemView(((IStickyHeaderView) child));
+            stickyHeaderModel.setRecyclerViewItemView(child);
 
             T recyclerViewItemModel = adapter.getItem(adapterPosition);
 
@@ -297,10 +299,8 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             if (stickyHeaderModel == null) {
                 continue;
             }
-            if (!(child instanceof IStickyHeaderView)) {
-                throw new IllegalStateException(child.getClass().getName() + " 必须实现IStickyHeaderView 接口");
-            }
-            stickyHeaderModel.setRecyclerViewItemView(((IStickyHeaderView) child));
+
+            stickyHeaderModel.setRecyclerViewItemView(child);
             T recyclerViewItemModel = stickyHeaderAdapter.getItem(adapterPosition);
             if (mCurrentStickyHeaderNode == null || !mCurrentStickyHeaderNode.getStickyHeaderModel().getRecyclerViewItemModel().equals(recyclerViewItemModel)) {
                 return stickyHeaderModel;
@@ -365,13 +365,13 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         }
         ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
         if (mStickyHeaderLayout.getChildCount() == 0) {
-            mStickyHeaderLayout.addView((View) stickyHeaderModel.createIfAbsent(mRecyclerView,mRecyclerView.getContext(), stickyHeaderModel.getRecyclerViewItemModel().getClass()));
+            mStickyHeaderLayout.addView(stickyHeaderModel.createIfAbsent(mRecyclerView, mRecyclerView.getContext()));
         } else {
-            if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView,stickyHeaderModel.getClass())) {
+            if (mStickyHeaderLayout.getChildAt(0) != StickyHeaderRegistry.getView(mRecyclerView, stickyHeaderModel.getClass())) {
                 mStickyHeaderLayout.removeAllViews();
-                mStickyHeaderLayout.addView((View) stickyHeaderModel.createIfAbsent(mRecyclerView,mRecyclerView.getContext(), stickyHeaderModel.getRecyclerViewItemModel().getClass()));
+                mStickyHeaderLayout.addView(stickyHeaderModel.createIfAbsent(mRecyclerView, mRecyclerView.getContext()));
             }
-            ((IStickyHeaderView<T>) mStickyHeaderLayout.getChildAt(0)).setData(stickyHeaderModel.getRecyclerViewItemModel());
+            stickyHeaderModel.onBindView();
 
         }
         StickyHeaderModelPool.recycle(stickyHeaderModel);
@@ -425,6 +425,14 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         } else {
             resetStickyHeader();
             mStickyHeaderLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private int getItemViewTop(View view) {
+        if (view instanceof IStickyHeaderView) {
+            return ((IStickyHeaderView) view).getItemViewTop();
+        } else {
+            return view.getTop();
         }
     }
 }
