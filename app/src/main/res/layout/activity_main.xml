@@ -11,10 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
 
+
     <FrameLayout
+        android:layout_marginTop="500px"
         android:id="@+id/header.layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></FrameLayout>
+    <View
+        android:layout_marginTop="500px"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#0f0"></View>
     <LinearLayout android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:orientation="horizontal"

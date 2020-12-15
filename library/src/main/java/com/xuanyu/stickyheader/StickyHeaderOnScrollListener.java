@@ -148,9 +148,9 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         if (nextStickyHeaderModel != null
                 && ((recyclerViewItemView = nextStickyHeaderModel.getRecyclerViewItemView()) != null)
                 && (getItemViewTop(recyclerViewItemView) >= mStickyHeaderLayoutTop + mDownOffset
-                && getItemViewTop(recyclerViewItemView) <= (mStickyHeaderLayoutTop + mDownOffset + mStickyHeaderLayout.getHeight() - dy))) {
+                && getItemViewTop(recyclerViewItemView) <= (mStickyHeaderLayoutTop + mDownOffset + mStickyHeaderLayout.getMeasuredHeight() - dy))) {
             //紧相连状态
-            int wannaTop = Math.min(mStickyHeaderLayoutTop, getItemViewTop(recyclerViewItemView) - mStickyHeaderLayout.getHeight() - mDownOffset);
+            int wannaTop = Math.min(mStickyHeaderLayoutTop, getItemViewTop(recyclerViewItemView) - mStickyHeaderLayout.getMeasuredHeight() - mDownOffset);
             System.out.println("jiangbin stickyHeaderBottom 11111 " + wannaTop);
 
             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
@@ -233,11 +233,11 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             stickyHeaderNode.setStickyHeaderModel(nextStickyHeaderModel);
             stickyHeaderNode.setPrevNode(mCurrentStickyHeaderNode);
             mCurrentStickyHeaderNode = stickyHeaderNode;
-        } else if (getItemViewTop(nextStickyItemView) <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getHeight() + mTopOffset)) {
+        } else if (getItemViewTop(nextStickyItemView) <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getMeasuredHeight() + mTopOffset)) {
             //紧相邻
 
-            int wannaTop = getItemViewTop(nextStickyItemView) - mStickyHeaderLayout.getHeight() - mTopOffset;
-
+            int wannaTop = getItemViewTop(nextStickyItemView) - mStickyHeaderLayout.getMeasuredHeight() - mTopOffset;
+            wannaTop = MathUtils.clamp(wannaTop, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight(), mStickyHeaderLayoutTop);
             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());
             StickyHeaderModelPool.recycle(nextStickyHeaderModel);
         } else {
