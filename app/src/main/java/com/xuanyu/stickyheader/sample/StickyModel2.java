@@ -16,6 +16,7 @@ public class StickyModel2 extends BaseStickyHeaderModel<HeaderStringModel> {
 
     @Override
     public void onBindView(View view, HeaderStringModel data) {
-        ((HeaderView) view).setData(data);
+
+        ((HeaderView) view).setData(new HeaderStringModel(data.headerText + "吸顶"));
     }
 }

@@ -33,15 +33,17 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
-
+        int step = 10;
 
         List<TextModel> models = new ArrayList<>();
+        models.add(new NormalStringModel("Normal Item -1" ));
+
         for (int i = 0; i < 100; i++) {
-            if (i % 10 == 0) {
-                if ((i / 10) % 2 == 0) {
-                    models.add(new HeaderStringModelImplSticky("Header Sticky Item " + i));
+            if (i % step == 0) {
+                if ((i / step) % 2 == 0) {
+                    models.add(new HeaderStringModelImplSticky("Header Sticky Item " + i / step));
                 } else {
-                    models.add(new HeaderStringModel("Header  Item " + i));
+                    models.add(new HeaderStringModel("Header  Item " + i / step));
 
                 }
             }
@@ -49,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
         for (int i = 100; i < 200; i++) {
-            if (i % 10 == 0) {
-                if ((i / 10) % 2 == 0) {
-                    models.add(new HeaderStringModelImplSticky("Header Sticky Item " + i));
+            if (i % step == 0) {
+                if ((i / step) % 2 == 0) {
+                    models.add(new HeaderStringModelImplSticky("Header Sticky Item " + i / step));
                 } else {
-                    models.add(new HeaderStringModel("Header  Item " + i));
+                    models.add(new HeaderStringModel("Header  Item " + i / step));
 
                 }
 
@@ -67,6 +69,15 @@ public class MainActivity extends AppCompatActivity {
         StickyHeaderRegistry.registerTransfer(HeaderStringModelImplSticky.class, StickyModel.class);
         StickyHeaderRegistry.registerTransfer(HeaderStringModel.class, StickyModel2.class);
 
+
+    }
+
+    public void turnOn(View view) {
+        StickyHeaderHelper.turnStickyHeader(true, mRecyclerView);
+    }
+
+    public void turnOff(View view) {
+        StickyHeaderHelper.turnStickyHeader(false, mRecyclerView);
 
     }
 
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             if (holder instanceof TextViewHolder) {
                 ((NormalView) holder.itemView).mTextView.setText(mTextModels.get(position).getText());
             } else if (holder instanceof HeaderViewImplStickyHolder) {
-                ((HeaderViewImplSticky) holder.itemView).setData((HeaderStringModelImplSticky) mTextModels.get(position));
+                ((HeaderViewImplSticky) holder.itemView).setData2((HeaderStringModelImplSticky) mTextModels.get(position));
             } else if (holder instanceof HeaderViewHolder) {
                 ((HeaderView) holder.itemView).setData((HeaderStringModel) mTextModels.get(position));
             }

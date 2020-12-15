@@ -20,7 +20,16 @@ public class StickyHeaderHelper {
 
     public static <T> void init(RecyclerView recyclerView, int headerViewTop, ViewGroup stickyHeaderLayout) {
         if (recordMap.get(recyclerView) == null) {
-            StickyHeaderOnScrollListener<T> listener = new StickyHeaderOnScrollListener<T>(recyclerView,stickyHeaderLayout, headerViewTop);
+            StickyHeaderOnScrollListener<T> listener = new StickyHeaderOnScrollListener<T>(recyclerView, stickyHeaderLayout, headerViewTop);
+            recordMap.put(recyclerView, listener);
+            recyclerView.addOnScrollListener(listener);
+        }
+    }
+
+    public static <T> void init(RecyclerView recyclerView, int headerViewTop, ViewGroup stickyHeaderLayout, int offset) {
+        if (recordMap.get(recyclerView) == null) {
+            StickyHeaderOnScrollListener<T> listener = new StickyHeaderOnScrollListener<T>(recyclerView, stickyHeaderLayout, headerViewTop);
+            listener.setOffset(offset);
             recordMap.put(recyclerView, listener);
             recyclerView.addOnScrollListener(listener);
         }

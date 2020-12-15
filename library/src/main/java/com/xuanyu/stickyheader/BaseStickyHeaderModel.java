@@ -47,7 +47,7 @@ public abstract class BaseStickyHeaderModel<T> {
     public abstract void onBindView(View stickyView, T data);
 
 
-    public void onBindView() {
+     void onBindView() {
         if (mStickyView instanceof IStickyHeaderView) {
             ((IStickyHeaderView) mStickyView).setData(getRecyclerViewItemModel());
         } else {

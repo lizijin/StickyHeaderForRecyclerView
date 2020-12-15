@@ -27,6 +27,9 @@ public class HeaderViewImplSticky extends FrameLayout implements IStickyHeaderVi
 
     @Override
     public void setData(HeaderStringModelImplSticky headerStringModel) {
+        mTextView.setText(headerStringModel.getText()+"吸顶");
+    }
+    public void setData2(HeaderStringModelImplSticky headerStringModel) {
         mTextView.setText(headerStringModel.getText());
     }
 }
