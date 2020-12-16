@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mRecyclerView.setAdapter(new TextAdapter(models));
 
-        StickyHeaderHelper.init(mRecyclerView, 500, mHeaderLayout,40);
+        StickyHeaderHelper.init(mRecyclerView, 500, mHeaderLayout,0);
         StickyHeaderRegistry.registerTransfer(HeaderStringModelImplSticky.class, StickyModel.class);
         StickyHeaderRegistry.registerTransfer(HeaderStringModel.class, StickyModel2.class);
 
