@@ -43,6 +43,7 @@ public class StickyHeaderRegistry {
     private static HashMap<Class, Class> sTransferMap = new HashMap<>();
     private static HashSet<Class> sExcludeTypeMap = new HashSet<>();
 
+    //todo 针对不同的RecyclerView需要区别对待
     public static <T> void registerTransfer(Class<T> fromClazz, Class<? extends BaseStickyHeaderModel<T>> toClazz) {
         sTransferMap.put(fromClazz, toClazz);
     }

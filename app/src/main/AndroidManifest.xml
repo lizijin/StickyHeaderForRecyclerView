@@ -9,13 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.OffsetStickyHeaderActivity"></activity>
+        <activity android:name=".activity.CustomTopStickyHeaderActivity"></activity>
+        <activity android:name=".activity.MultiStickyHeaderActivity"></activity>
+        <activity android:name=".activity.PositionStickyHeaderActivity"></activity>
+        <activity android:name=".activity.SwitchStickyHeaderActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.SingleStickyHeaderActivity" />
     </application>
 
 </manifest>

@@ -3,10 +3,10 @@ package com.xuanyu.stickyheader.sample.bean;
 /**
  * 书名
  */
-public class Book implements Naming {
+public class CustomBook implements Naming {
     public String name;
 
-    public Book(String name) {
+    public CustomBook(String name) {
         this.name = name;
     }
 
@@ -17,6 +17,6 @@ public class Book implements Naming {
 
     @Override
     public int getItemType() {
-        return Naming.BOOK_NAME;
+        return Naming.CUSTOM_BOOK_NAME;
     }
 }

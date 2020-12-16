@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler.view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+
+    <FrameLayout
+        android:id="@+id/header.layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"></FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="200dp"
+        android:background="#0f0"></View>
+
+    <LinearLayout
+        android:id="@+id/layout.switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/button.turn.on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="turnOn"
+            android:text="turn on"></Button>
+
+        <Button
+            android:id="@+id/button.turn.off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="turnOff"
+            android:text="turn off"></Button>
+    </LinearLayout>
+</FrameLayout>

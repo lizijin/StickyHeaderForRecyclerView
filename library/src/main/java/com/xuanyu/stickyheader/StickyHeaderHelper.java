@@ -26,12 +26,19 @@ public class StickyHeaderHelper {
         }
     }
 
-    public static <T> void init(RecyclerView recyclerView, int headerViewTop, ViewGroup stickyHeaderLayout, int offset) {
+    public static <T> void init(final RecyclerView recyclerView, final ViewGroup stickyHeaderLayout, final int offset) {
         if (recordMap.get(recyclerView) == null) {
-            StickyHeaderOnScrollListener<T> listener = new StickyHeaderOnScrollListener<T>(recyclerView, stickyHeaderLayout, headerViewTop);
-            listener.setOffset(offset);
-            recordMap.put(recyclerView, listener);
-            recyclerView.addOnScrollListener(listener);
+            stickyHeaderLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    int headerViewTop = stickyHeaderLayout.getTop();
+                    StickyHeaderOnScrollListener<T> listener = new StickyHeaderOnScrollListener<T>(recyclerView, stickyHeaderLayout, headerViewTop);
+                    listener.setOffset(offset);
+                    recordMap.put(recyclerView, listener);
+                    recyclerView.addOnScrollListener(listener);
+                }
+            });
+
         }
     }
 

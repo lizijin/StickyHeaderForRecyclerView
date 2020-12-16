@@ -16,12 +16,13 @@ public interface IStickyHeaderView<T> {
 
     /**
      * RecyclerView中需要吸顶的View的上限
+     *
      * @return
      */
     int getItemViewTop();
 
 
-    void setData(T t);
+    void onBindView(T t);
 
 
 }

@@ -84,4 +84,39 @@
         <item>茅十八</item>
         <item>沐剑屏</item>
     </string-array>
+    <string-array name="liangyusheng">
+        <item>金世遗</item>
+        <item>张丹枫</item>
+        <item>慧明禅师</item>
+        <item>牟沧浪</item>
+        <item>金逐流</item>
+        <item>白发魔女</item>
+        <item>上官云龙</item>
+        <item>云舞阳</item>
+        <item>凌未风</item>
+        <item>杨炎</item>
+        <item>唐经天</item>
+        <item>空空儿</item>
+        <item>段克邪</item>
+        <item>齐勒铭</item>
+        <item>李思南</item>
+        <item>狂侠天骄魔女</item>
+    </string-array>
+    <string-array name="gulong">
+        <item>吴明</item>
+        <item>阴姬</item>
+        <item>燕南天</item>
+        <item>李商</item>
+        <item>柴玉关</item>
+        <item>木道人</item>
+        <item>邀月宫主</item>
+        <item>西门吹雪</item>
+        <item>展白</item>
+        <item>俞佩玉</item>
+        <item>夜帝</item>
+        <item>原随云</item>
+        <item>逍遥侯</item>
+        <item>王夫人</item>
+        <item>怜星宫主</item>
+    </string-array>
 </resources>

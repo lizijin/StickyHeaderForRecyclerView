@@ -11,4 +11,10 @@ public class Person implements Naming {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getItemType() {
+        return Naming.PERSON_NAME;
+
+    }
 }
