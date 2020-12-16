@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="feihuwaizhuan">
+        <item>胡斐</item>
+        <item>程灵素</item>
+        <item>袁紫衣</item>
+        <item>苗人凤</item>
+        <item>马春花</item>
+        <item>福康安</item>
+        <item>赵半山</item>
+        <item>田归农</item>
+        <item>田归农</item>
+        <item>商宝震</item>
+    </string-array>
+    <string-array name="xueshangfeihu">
+        <item>宝树</item>
+        <item>曹云奇</item>
+        <item>胡一刀</item>
+        <item>刘元鹤</item>
+        <item>陶子安</item>
+        <item>陶百岁</item>
+        <item>殷吉</item>
+        <item>赛总</item>
+        <item>管平</item>
+        <item>阿四</item>
+    </string-array>
+    <string-array name="lianchengjue">
+        <item>狄云</item>
+        <item>水笙</item>
+        <item>戚芳</item>
+        <item>丁典</item>
+        <item>万震山</item>
+        <item>万圭</item>
+        <item>花铁干</item>
+        <item>吴坎</item>
+        <item>血刀老祖</item>
+        <item>戚长发</item>
+    </string-array>
+    <string-array name="tianlongbabu">
+        <item>段誉</item>
+        <item>虚竹</item>
+        <item>阿紫</item>
+        <item>乔峰</item>
+        <item>阿朱</item>
+        <item>慕容复</item>
+        <item>王语嫣</item>
+        <item>段正淳</item>
+        <item>木婉清</item>
+        <item>鸠摩智</item>
+    </string-array>
+    <string-array name="shediaoyingxiong">
+        <item>郭靖</item>
+        <item>黄蓉</item>
+        <item>洪七公</item>
+        <item>黄药师</item>
+        <item>周伯通</item>
+        <item>欧阳克</item>
+        <item>梅超风</item>
+        <item>柯镇恶</item>
+        <item>杨康</item>
+        <item>朱聪</item>
+    </string-array>
+    <string-array name="baimaxiaoxifeng">
+        <item>李文秀</item>
+        <item>苏普</item>
+        <item>阿曼</item>
+        <item>苏鲁克</item>
+        <item>陈达海</item>
+        <item>车尔库</item>
+        <item>李三</item>
+        <item>霍元龙</item>
+        <item>丁同</item>
+        <item>桑斯</item>
+    </string-array>
+    <string-array name="ludingji">
+        <item>韦小宝</item>
+        <item>吴三桂</item>
+        <item>双儿</item>
+        <item>陈近南</item>
+        <item>方怡</item>
+        <item>鳌拜</item>
+        <item>吴应熊</item>
+        <item>施琅</item>
+        <item>茅十八</item>
+        <item>沐剑屏</item>
+    </string-array>
+</resources>

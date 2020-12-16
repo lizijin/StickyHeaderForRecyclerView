@@ -8,10 +8,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-public class NormalView extends FrameLayout {
+public class PersonView extends FrameLayout {
     public final TextView mTextView;
 
-    public NormalView(@NonNull Context context) {
+    public PersonView(@NonNull Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.item_normal,this);
         mTextView = findViewById(R.id.normal_text);

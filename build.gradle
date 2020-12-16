@@ -2,7 +2,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven{
+        maven {
             url "https://dl.bintray.com/xuanyudaddy/sticky-header-recyclerview"
         }
         google()
@@ -22,7 +22,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven{
+        maven {
             url "https://dl.bintray.com/xuanyudaddy/sticky-header-recyclerview"
         }
         google()

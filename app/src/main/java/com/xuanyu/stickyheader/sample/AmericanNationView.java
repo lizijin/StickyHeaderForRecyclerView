@@ -8,10 +8,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.xuanyu.stickyheader.IStickyHeaderView;
+import com.xuanyu.stickyheader.sample.bean.AmericanNation;
 
-public class HeaderViewImplSticky extends FrameLayout implements IStickyHeaderView<HeaderStringModelImplSticky> {
+public class AmericanNationView extends FrameLayout implements IStickyHeaderView<AmericanNation> {
    private TextView mTextView;
-    public HeaderViewImplSticky(@NonNull Context context) {
+    public AmericanNationView(@NonNull Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.item_header,this);
         mTextView = findViewById(R.id.header_text);
@@ -26,10 +27,10 @@ public class HeaderViewImplSticky extends FrameLayout implements IStickyHeaderVi
 
 
     @Override
-    public void setData(HeaderStringModelImplSticky headerStringModel) {
-        mTextView.setText(headerStringModel.getText()+"吸顶");
+    public void setData(AmericanNation headerStringModel) {
+        mTextView.setText(headerStringModel.getName()+"吸顶");
     }
-    public void setData2(HeaderStringModelImplSticky headerStringModel) {
-        mTextView.setText(headerStringModel.getText());
+    public void setData2(AmericanNation headerStringModel) {
+        mTextView.setText(headerStringModel.getName());
     }
 }

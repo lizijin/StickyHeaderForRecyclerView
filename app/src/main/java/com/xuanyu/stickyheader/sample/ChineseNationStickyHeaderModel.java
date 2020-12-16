@@ -4,18 +4,19 @@ import android.content.Context;
 import android.view.View;
 
 import com.xuanyu.stickyheader.BaseStickyHeaderModel;
+import com.xuanyu.stickyheader.sample.bean.AmericanNation;
 
-public class StickyModel extends BaseStickyHeaderModel<HeaderStringModelImplSticky> {
+public class ChineseNationStickyHeaderModel extends BaseStickyHeaderModel<AmericanNation> {
 
     @Override
     public View getStickyView(Context context) {
         System.out.println("jiangbin getView");
-        HeaderViewImplSticky headerView = new HeaderViewImplSticky(context);
+        AmericanNationView headerView = new AmericanNationView(context);
         return headerView;
     }
 
     @Override
-    public void onBindView(View view, HeaderStringModelImplSticky data) {
+    public void onBindView(View view, AmericanNation data) {
 
     }
 }
