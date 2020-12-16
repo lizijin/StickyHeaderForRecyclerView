@@ -34,7 +34,7 @@ bintray {
         repo = 'sticky-header-recyclerview'
         name = 'sticky-header-recyclerview'
         configurations = ['archives']
-        desc = 'An android library.'
+        desc = 'RecyclerView吸顶库.'
         websiteUrl = 'https://github.com/lizijin/StickyHeaderForRecyclerView'
         vcsUrl = 'https://github.com/lizijin/StickyHeaderForRecyclerView.git'
         licenses = ["Apache-2.0"]
