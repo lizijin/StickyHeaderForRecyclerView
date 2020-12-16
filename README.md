@@ -1,5 +1,10 @@
 StickyHeaderForRecyclerView
 ---
+用该吸顶库实现京东购物车列表功能完全不在话下，奉上京东购物车截图。
+
+![京东购物车吸顶图](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheaderjd2.gif)
+
+
 ## 介绍
 StickyHeaderForRecyclerView库主要的功能是方便RecyclerView实现吸顶功能。它目前支持以下功能:
 
