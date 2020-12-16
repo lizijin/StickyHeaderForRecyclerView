@@ -115,3 +115,13 @@ public class BookStickyHeaderModel extends BaseStickyHeaderModel<Book> {
  StickyHeaderRegistry.registerTransfer(Book.class, BookStickyHeaderModel.class);
 ```
 5. 结束！Enjoy it！！
+
+---
+
+
+欢迎您访问github项目地址[https://github.com/lizijin/StickyHeaderForRecyclerView](https://github.com/lizijin/StickyHeaderForRecyclerView)，如果您使用本库，请提出您的宝贵意见。
+
+如果你有任何问题，欢迎您关注微信公众号。我将第一时间给您答疑解惑
+![欢迎扫码关注公众号](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/byte_station_微信公众号.jpeg =240x240)
+ 
+
