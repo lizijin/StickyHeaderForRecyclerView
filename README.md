@@ -17,15 +17,15 @@ StickyHeaderForRecyclerView库主要的功能是方便RecyclerView实现吸顶�
 
 - 支持多类型吸顶功能
 
-![支持多类型吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_video2.gif)
+![支持多类型吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_v2.gif)
 
 - 支持开启和关闭吸顶功能
 
-![支持开启和关闭吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_video3.gif)
+![支持开启和关闭吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_v3.gif)
 
 - 支持指定位置吸顶功能
 
-![支持指定位置吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_video4.gif)
+![支持指定位置吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_v4.gif)
 
 - 支持设置吸顶偏移量
 
