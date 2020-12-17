@@ -85,3 +85,4 @@ lint/tmp/
 # lint/reports/
 .DS_Store
 .idea/misc.xml
+buglist.md
