@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.OffsetStickyHeaderActivity"></activity>
+        <activity android:name=".activity.AppBarLayoutStickyHeaderActivity"></activity>
         <activity android:name=".activity.CustomTopStickyHeaderActivity"></activity>
         <activity android:name=".activity.MultiStickyHeaderActivity"></activity>
         <activity android:name=".activity.PositionStickyHeaderActivity"></activity>

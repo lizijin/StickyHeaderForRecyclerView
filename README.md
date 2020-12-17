@@ -1,10 +1,10 @@
 StickyHeaderForRecyclerView
----
+
 用该吸顶库实现京东购物车列表功能完全不在话下，奉上京东购物车截图。
 
 ![京东购物车吸顶图](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheaderjd2.gif)
 
-
+---
 ## 介绍
 StickyHeaderForRecyclerView库主要的功能是方便RecyclerView实现吸顶功能。它目前支持以下功能:
 
@@ -14,6 +14,7 @@ StickyHeaderForRecyclerView库主要的功能是方便RecyclerView实现吸顶�
 4. 支持指定位置吸顶功能
 5. 支持设置吸顶偏移量
 6. 支持自定义RecyclerView上Item吸顶边界自定义
+7. 可以无缝配合AppBarLayout
 
 ## 效果
 - 支持单类型吸顶功能
@@ -22,15 +23,15 @@ StickyHeaderForRecyclerView库主要的功能是方便RecyclerView实现吸顶�
 
 - 支持多类型吸顶功能
 
-![支持多类型吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_v2.gif)
+![支持多类型吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_video2.gif)
 
 - 支持开启和关闭吸顶功能
 
-![支持开启和关闭吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_v3.gif)
+![支持开启和关闭吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_video3.gif)
 
 - 支持指定位置吸顶功能
 
-![支持指定位置吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_v4.gif)
+![支持指定位置吸顶功能](https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/dmall/stickyheadern_video4.gif)
 
 - 支持设置吸顶偏移量
 
@@ -112,14 +113,24 @@ public class BookStickyHeaderModel extends BaseStickyHeaderModel<Book> {
 }
 
 ```
+4. 编写Adapter实现StickyHeaderAdapter接口，重写transferToStickyHeaderModel方法，默认返回StickyHeaderHelper.transferToStickyHeaderModel(this, position)。您可以做其它特殊处理
 
-4. 在RecyclerView#setAdapter之后，初始化吸顶代码。需要调用StickyHeaderRegistry.registerTransfer将需要吸顶Item对应的Bean和它对应的StickyHeaderModel一一对应起来
+```
+public class NamingStickyHeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyHeaderAdapter<Naming> {
+    @Override
+    public BaseStickyHeaderModel<Naming> transferToStickyHeaderModel(int position) {
+        return StickyHeaderHelper.transferToStickyHeaderModel(this, position);
+    }
+ }    
+
+```
+5. 在RecyclerView#setAdapter之后，初始化吸顶代码。需要调用StickyHeaderRegistry.registerTransfer将需要吸顶Item对应的Bean和它对应的StickyHeaderModel一一对应起来
 
 ```
  StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 0);
  StickyHeaderRegistry.registerTransfer(Book.class, BookStickyHeaderModel.class);
 ```
-5. 结束！Enjoy it！！
+6. 结束！Enjoy it！！
 
 ---
 

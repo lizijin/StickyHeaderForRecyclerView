@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         routeItems.add(offsetStickyHeaderDemo);
         RouteItem customTopStickyHeaderDemo = new RouteItem("吸顶TOP自定义", "演示了吸顶边界自定义情况", CustomTopStickyHeaderActivity.class);
         routeItems.add(customTopStickyHeaderDemo);
+        RouteItem appBarLayoutStickyHeaderDemo = new RouteItem("配合AppBarLayout", "演示了配合AppBarLayout使用情况", AppBarLayoutStickyHeaderActivity.class);
+        routeItems.add(appBarLayoutStickyHeaderDemo);
         mMainAdapter = new MainAdapter(routeItems);
         mRecyclerView.setAdapter(mMainAdapter);
     }
