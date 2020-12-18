@@ -14,6 +14,7 @@
         <activity android:name=".activity.CustomTopStickyHeaderActivity"></activity>
         <activity android:name=".activity.MultiStickyHeaderActivity"></activity>
         <activity android:name=".activity.PositionStickyHeaderActivity"></activity>
+        <activity android:name=".activity.ItemDecorationStickyHeaderActivity"></activity>
         <activity android:name=".activity.SwitchStickyHeaderActivity" />
         <activity android:name=".activity.SmallHeaderViewStickyHeaderActivity" />
         <activity android:name=".activity.MainActivity">

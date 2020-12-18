@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         routeItems.add(appBarLayoutStickyHeaderDemo);
         RouteItem smallBookDemo = new RouteItem("吸顶View比较小的时候", "演示吸顶View比较小的时候会不会有问题", SmallHeaderViewStickyHeaderActivity.class);
         routeItems.add(smallBookDemo);
+        RouteItem itemDecorationDemo = new RouteItem("ItemDecorationDemo", "演示ItemDecorationDemo", ItemDecorationStickyHeaderActivity.class);
+        routeItems.add(itemDecorationDemo);
         mMainAdapter = new MainAdapter(routeItems);
         mRecyclerView.setAdapter(mMainAdapter);
     }

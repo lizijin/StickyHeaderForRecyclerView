@@ -19,13 +19,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="#999999"
+        android:textColor="#666666"
         android:textSize="16sp"
         android:layout_marginBottom="10dp">
 
     </TextView>
     <View
-        android:background="#666666"
+        android:background="#dddddd"
         android:layout_width="match_parent"
         android:layout_height="1dp"></View>
 
