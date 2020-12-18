@@ -11,13 +11,14 @@ import com.xuanyu.stickyheader.BaseStickyHeaderModel;
 import com.xuanyu.stickyheader.StickyHeaderAdapter;
 import com.xuanyu.stickyheader.StickyHeaderHelper;
 import com.xuanyu.stickyheader.sample.bean.Author;
+import com.xuanyu.stickyheader.sample.bean.Book;
 import com.xuanyu.stickyheader.sample.bean.CustomBook;
-import com.xuanyu.stickyheader.sample.view.CustomBookView;
+import com.xuanyu.stickyheader.sample.bean.Naming;
 import com.xuanyu.stickyheader.sample.view.AuthorView;
 import com.xuanyu.stickyheader.sample.view.BookView;
+import com.xuanyu.stickyheader.sample.view.CustomBookView;
 import com.xuanyu.stickyheader.sample.view.PersonView;
-import com.xuanyu.stickyheader.sample.bean.Book;
-import com.xuanyu.stickyheader.sample.bean.Naming;
+import com.xuanyu.stickyheader.sample.view.SmallBookView;
 
 import java.util.List;
 
@@ -52,7 +53,13 @@ public class NamingStickyHeaderAdapter extends RecyclerView.Adapter<RecyclerView
             view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return new CustomBookViewHolder(view);
         } else if (viewType == Naming.BOOK_NAME) {
+
             View view = new BookView(parent.getContext());
+            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            return new BookViewHolder(view);
+        } else if (viewType == Naming.SMALL_BOOK_NAME) {
+
+            View view = new SmallBookView(parent.getContext());
             view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return new BookViewHolder(view);
         } else if (viewType == Naming.AUTHOR_NAME) {
@@ -68,7 +75,11 @@ public class NamingStickyHeaderAdapter extends RecyclerView.Adapter<RecyclerView
         if (holder instanceof PersonViewHolder) {
             ((PersonView) holder.itemView).mTextView.setText(mNamings.get(position).getName());
         } else if (holder instanceof BookViewHolder) {
-            ((BookView) holder.itemView).setData((Book) mNamings.get(position));
+            if (holder.itemView instanceof BookView) {
+                ((BookView) holder.itemView).setData((Book) mNamings.get(position));
+            } else {
+                ((SmallBookView) holder.itemView).setData((Book) mNamings.get(position));
+            }
         } else if (holder instanceof AuthorViewHolder) {
             ((AuthorView) holder.itemView).setData((Author) mNamings.get(position));
         } else if (holder instanceof CustomBookViewHolder) {
