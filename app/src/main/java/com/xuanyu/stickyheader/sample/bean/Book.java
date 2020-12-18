@@ -9,7 +9,7 @@ public class Book implements Naming {
 
     public Book(String name,boolean small) {
         this.name = name;
-        this.small = true;
+        this.small = small;
     }
     public Book(String name) {
         this(name,false);
