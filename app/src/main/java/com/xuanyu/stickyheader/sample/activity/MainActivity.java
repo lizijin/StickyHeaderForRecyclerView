@@ -1,16 +1,16 @@
 package com.xuanyu.stickyheader.sample.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.xuanyu.stickyheader.sample.R;
 import com.xuanyu.stickyheader.sample.bean.RouteItem;
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         routeItems.add(customTopStickyHeaderDemo);
         RouteItem appBarLayoutStickyHeaderDemo = new RouteItem("配合AppBarLayout", "演示了配合AppBarLayout使用情况", AppBarLayoutStickyHeaderActivity.class);
         routeItems.add(appBarLayoutStickyHeaderDemo);
+        RouteItem smallBookDemo = new RouteItem("吸顶View比较小的时候", "演示吸顶View比较小的时候会不会有问题", SmallHeaderViewStickyHeaderActivity.class);
+        routeItems.add(smallBookDemo);
         mMainAdapter = new MainAdapter(routeItems);
         mRecyclerView.setAdapter(mMainAdapter);
     }
