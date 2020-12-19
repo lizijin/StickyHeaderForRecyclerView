@@ -9,6 +9,8 @@
 
 package com.xuanyu.stickyheader;
 
+import android.util.Log;
+
 import java.util.HashMap;
 
 public class StickyHeaderModelPool {
@@ -20,13 +22,12 @@ public class StickyHeaderModelPool {
         }
         BaseStickyHeaderModel<?> stickyHeaderModel = sPools.get(clazz).acquire();
         if (stickyHeaderModel != null) {
-            System.out.println("StickyHeaderModelPool -- 从缓存中获取");
+            Log.e(StickyHeaderModelPool.class.getSimpleName(), "StickyHeaderModelPool -- 从缓存中获取");
             return stickyHeaderModel;
         }
         try {
-            //todo jiangxuanyu 如果缓存池没有满 提示报错
-            System.out.println("StickyHeaderModelPool -- 反射获取");
-
+            //todo jiangxuanyu 想个办法 如果反射次数过多 开发时直接报错
+            Log.e(StickyHeaderModelPool.class.getSimpleName(), "StickyHeaderModelPool -- 反射获取");
             return clazz.newInstance();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
