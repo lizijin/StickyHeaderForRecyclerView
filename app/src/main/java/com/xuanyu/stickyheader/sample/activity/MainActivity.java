@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         routeItems.add(scrollToPositionDemo);
         RouteItem complexViewDemo = new RouteItem("复杂View吸顶", "演示复杂View吸顶", ComplexViewStickyHeaderActivity.class);
         routeItems.add(complexViewDemo);
+        RouteItem dataChangedDemo = new RouteItem("数据变化时", "演示数据变化时吸顶", DataChangedStickyHeaderActivity.class);
+        routeItems.add(dataChangedDemo);
         mMainAdapter = new MainAdapter(routeItems);
         mRecyclerView.setAdapter(mMainAdapter);
     }

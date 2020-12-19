@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,9 +29,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     private ViewGroup mStickyHeaderLayout;
     private RecyclerView mRecyclerView;
     private StickyHeaderAdapter<T> mAdapter;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
     private StickyHeaderNode<T> mCurrentStickyHeaderNode;// 当前吸顶的Node
-    private long mDelayTime = 300L;
     private boolean mOn = true;
     private String tag = getClass().getSimpleName();
     private Context mContext;
@@ -38,13 +37,6 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     //向上滑动偏移量 默认为0 单位dp
     private int mTopOffset = 0;
     private int mDownOffset = 0;
-    //    private boolean mChanged = false;
-    private Runnable rebuildStickyHeaderRunnable = new Runnable() {
-        @Override
-        public void run() {
-            rebuildStickyHeader();
-        }
-    };
 
     public StickyHeaderOnScrollListener(RecyclerView recyclerView, ViewGroup stickyHeaderLayout, int headViewTop) {
         this.mStickyHeaderLayoutTop = headViewTop;
@@ -52,62 +44,16 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         this.mRecyclerView = recyclerView;
         this.mContext = recyclerView.getContext();
         this.mAdapter = (StickyHeaderAdapter<T>) mRecyclerView.getAdapter();
-        mDelayTime = 250;
-        mRecyclerView.getAdapter().registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onChanged() {
-                super.onChanged();
-                System.out.println(tag + "onChanged() " + mRecyclerView.getScrollX());
-                if (mOn) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, mDelayTime);
-                }
-            }
+            public void onGlobalLayout() {
+                rebuildStickyHeader();
 
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                super.onItemRangeChanged(positionStart, itemCount);
-                System.out.println(tag + "onItemRangeChanged() " + mRecyclerView.getScrollX());
-                if (mOn) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, mDelayTime);
-                }
-            }
+                System.out.println("jiangbin onListener addOnGlobalLayoutListener");
 
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
-                System.out.println(tag + "onItemRangeChanged() " + mRecyclerView.getScrollX());
-                if (mOn) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, mDelayTime);
-                }
-                super.onItemRangeChanged(positionStart, itemCount, payload);
-            }
-
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                System.out.println(tag + "onItemRangeInserted() " + mRecyclerView.getScrollX());
-                if (mOn) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, mDelayTime);
-                }
-                super.onItemRangeInserted(positionStart, itemCount);
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                System.out.println(tag + "onItemRangeRemoved() " + mRecyclerView.getScrollX());
-                if (mOn) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, mDelayTime);
-                }
-                super.onItemRangeRemoved(positionStart, itemCount);
-            }
-
-            @Override
-            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-                System.out.println(tag + "onItemRangeMoved() " + mRecyclerView.getScrollX());
-                if (mOn) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, mDelayTime);
-                }
-                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
             }
         });
+
 
     }
 
@@ -480,6 +426,5 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
     void setOffset(int offset) {
         mTopOffset = mDownOffset = (int) (offset * mContext.getResources().getDisplayMetrics().density);
-
     }
 }
