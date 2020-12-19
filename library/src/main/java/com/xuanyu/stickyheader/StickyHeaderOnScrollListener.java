@@ -170,13 +170,13 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             }
 
             //当前吸顶View 不吸顶了
-            if (getItemViewTop(currentStickyHeaderModel.getRecyclerViewItemView()) > mStickyHeaderLayoutTop) {
+            if (getItemViewTop(currentStickyHeaderModel.getRecyclerViewItemView()) >= mStickyHeaderLayoutTop) {
                 if (mCurrentStickyHeaderNode.getPrevNode() == null) {
                     //前面没有吸顶的View了
                     mStickyHeaderLayout.setVisibility(View.GONE);
                 } else {
                     System.out.println("jiangbin stickyHeaderBottom 33333");
-//                    mStickyHeaderLayout.setVisibility(VISIBLE);
+                    mStickyHeaderLayout.setVisibility(VISIBLE);
                     View newStickyView = mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, mRecyclerView.getContext());
                     addStickyView(newStickyView);
                     mStickyHeaderLayout.setAlpha(0);
@@ -347,7 +347,8 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
         //todo mRecyclerView.getMeasuredWidth() / 4 应该更优雅一点
         View view = findChildViewUnder(mRecyclerView, mRecyclerView.getMeasuredWidth() / 4, mStickyHeaderLayoutTop);
-        if (view == null) {
+        //如果该位置没有View 或者View的Top == mStickyHeaderLayoutTop
+        if (view == null || getItemViewTop(view) == mStickyHeaderLayoutTop) {
             System.out.println("rebuildStickyHeader method view == null");
             return;
         }

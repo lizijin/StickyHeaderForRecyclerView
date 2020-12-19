@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         routeItems.add(smallBookDemo);
         RouteItem itemDecorationDemo = new RouteItem("ItemDecorationDemo", "演示ItemDecorationDemo", ItemDecorationStickyHeaderActivity.class);
         routeItems.add(itemDecorationDemo);
+        RouteItem scrollToPositionDemo = new RouteItem("ScrollToPosition", "演示ScrollToPosition", ScrollToPositionStickyHeaderActivity.class);
+        routeItems.add(scrollToPositionDemo);
+        RouteItem complexViewDemo = new RouteItem("复杂View吸顶", "演示复杂View吸顶", ComplexViewStickyHeaderActivity.class);
+        routeItems.add(complexViewDemo);
         mMainAdapter = new MainAdapter(routeItems);
         mRecyclerView.setAdapter(mMainAdapter);
     }
