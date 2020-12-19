@@ -33,4 +33,9 @@ public class Book implements Naming {
             return Naming.BOOK_NAME;
         return SMALL_BOOK_NAME;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

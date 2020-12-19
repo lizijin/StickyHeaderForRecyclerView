@@ -157,7 +157,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         }
         BaseStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView, false);
 
-        View recyclerViewItemView = null;
+        View recyclerViewItemView;
         if (nextStickyHeaderModel != null
                 && ((recyclerViewItemView = nextStickyHeaderModel.getRecyclerViewItemView()) != null)
                 && (getItemViewTop(recyclerViewItemView) >= mStickyHeaderLayoutTop + mDownOffset
@@ -179,13 +179,20 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             BaseStickyHeaderModel<T> currentStickyHeaderModel = findCurrentStickyHeaderModel(recyclerView);
 
             if (currentStickyHeaderModel == null) {
+                //当前不是紧相连状态，而且当前吸顶不在屏幕内，必须保证吸顶可见  解决header比较小，快速往下滑，吸顶消失
+                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());
                 return;
             }
+            System.out.println("jiangbin stickyHeaderBottom 2222 444444");
 
             //当前吸顶View 不吸顶了
             if (getItemViewTop(currentStickyHeaderModel.getRecyclerViewItemView()) >= mStickyHeaderLayoutTop) {
+                System.out.println("jiangbin stickyHeaderBottom 2222 222222");
+
                 if (mCurrentStickyHeaderNode.getPrevNode() == null) {
                     //前面没有吸顶的View了
+                    System.out.println("jiangbin stickyHeaderBottom 2222 333333");
+
                     mStickyHeaderLayout.setVisibility(View.GONE);
                 } else {
                     System.out.println("jiangbin stickyHeaderBottom 33333");
@@ -193,10 +200,14 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                     View newStickyView = mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, mRecyclerView.getContext());
                     addStickyView(newStickyView);
                     mStickyHeaderLayout.setAlpha(0);
+                    System.out.println("jiangbin stickyHeaderBottom 33333 Alpha0");
+
                     newStickyView.post(new Runnable() {
                         @Override
                         public void run() {
                             mStickyHeaderLayout.setAlpha(1);
+                            System.out.println("jiangbin stickyHeaderBottom 33333 Alpha1");
+
                             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
                         }
                     });
@@ -228,7 +239,6 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         if (getItemViewTop(nextStickyItemView) < mStickyHeaderLayoutTop) {
             System.out.println("jiangbin stickyHeaderTop 11111 ");
 
-            T recyclerViewItemModel = nextStickyHeaderModel.getRecyclerViewItemModel();
 
             View stickyHeaderView = nextStickyHeaderModel.createIfAbsent(mRecyclerView, recyclerView.getContext());
 
@@ -330,7 +340,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             } else {
                 //当前不吸顶或者找到当前吸顶的就返回null
 
-                if (mCurrentStickyHeaderNode == null || (mCurrentStickyHeaderNode.getStickyHeaderModel().getRecyclerViewItemModel().equals(recyclerViewItemModel) )) {
+                if (mCurrentStickyHeaderNode == null || (mCurrentStickyHeaderNode.getStickyHeaderModel().getRecyclerViewItemModel().equals(recyclerViewItemModel))) {
                     StickyHeaderModelPool.recycle(stickyHeaderModel);
                     return null;
                 }

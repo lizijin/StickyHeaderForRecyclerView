@@ -45,7 +45,7 @@ public class SmallHeaderViewStickyHeaderActivity extends AppCompatActivity {
         mAdapter = new NamingStickyHeaderAdapter(models);
         mRecyclerView.setAdapter(mAdapter);
 
-        StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 0);
+        StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 20);
         StickyHeaderRegistry.registerTransfer(Book.class, SmallBookStickyHeaderModel.class);
 
 
