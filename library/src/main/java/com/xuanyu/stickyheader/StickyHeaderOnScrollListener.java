@@ -436,6 +436,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                 }
                 mayBeNeighborStickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, childAdapterPosition);
                 if (mayBeNeighborStickyHeaderModel != null) {
+                    mayBeNeighborStickyHeaderModel.setRecyclerViewItemView(child);
                     break;
                 }
             }
