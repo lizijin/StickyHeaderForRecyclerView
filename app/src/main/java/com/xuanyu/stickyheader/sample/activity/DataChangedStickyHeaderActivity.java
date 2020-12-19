@@ -37,6 +37,10 @@ public class DataChangedStickyHeaderActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mHeaderLayout = findViewById(R.id.header_layout);
+        mRecyclerView.getItemAnimator().setAddDuration(1000);
+        mRecyclerView.getItemAnimator().setRemoveDuration(1000);
+        mRecyclerView.getItemAnimator().setChangeDuration(1000);
+
 
         models.addAll(getCharacters(R.array.feihuwaizhuan, "飞狐外传"));
         models.addAll(getCharacters(R.array.xueshangfeihu, "雪山飞狐"));
@@ -87,7 +91,7 @@ public class DataChangedStickyHeaderActivity extends AppCompatActivity {
 
     public void addDiff(View view) {
         models.add(1, new Book("AddDiff Item"));
-        mAdapter.notifyItemInserted(0);
+        mAdapter.notifyItemInserted(1);
     }
 
     public void updateDiff(View view) {

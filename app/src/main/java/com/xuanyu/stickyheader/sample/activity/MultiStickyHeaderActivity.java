@@ -43,7 +43,7 @@ public class MultiStickyHeaderActivity extends AppCompatActivity {
         models.add(new Author("古龙"));
         models.addAll(getCharacters(R.array.gulong, ""));
         //todo jiangxuanyu 加上金庸有bug
-//        models.add(new Author("金庸"));
+        models.add(new Author("金庸"));
         models.addAll(getCharacters(R.array.feihuwaizhuan, "飞狐外传"));
         models.addAll(getCharacters(R.array.xueshangfeihu, "雪山飞狐"));
         models.addAll(getCharacters(R.array.lianchengjue, "连城诀"));

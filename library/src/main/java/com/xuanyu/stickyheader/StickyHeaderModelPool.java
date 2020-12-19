@@ -16,7 +16,7 @@ public class StickyHeaderModelPool {
 
     public static BaseStickyHeaderModel<?> obtain(Class<BaseStickyHeaderModel<?>> clazz) {
         if (sPools.get(clazz) == null) {
-            sPools.put(clazz, new Pools.SynchronizedPool<BaseStickyHeaderModel<?>>(20));
+            sPools.put(clazz, new Pools.SynchronizedPool<BaseStickyHeaderModel<?>>(50));
         }
         BaseStickyHeaderModel<?> stickyHeaderModel = sPools.get(clazz).acquire();
         if (stickyHeaderModel != null) {
@@ -24,6 +24,7 @@ public class StickyHeaderModelPool {
             return stickyHeaderModel;
         }
         try {
+            //todo jiangxuanyu 如果缓存池没有满 提示报错
             System.out.println("StickyHeaderModelPool -- 反射获取");
 
             return clazz.newInstance();
@@ -35,9 +36,9 @@ public class StickyHeaderModelPool {
         return null;
     }
 
-    public static void recycle( BaseStickyHeaderModel<?> stickyHeaderModel) {
+    public static void recycle(BaseStickyHeaderModel<?> stickyHeaderModel) {
         Class clazz = stickyHeaderModel.getClass();
-        System.out.println("StickyHeaderModelPool -- recycle "+clazz);
+        System.out.println("StickyHeaderModelPool -- recycle " + clazz);
 
         if (sPools.get(clazz) == null) {
             return;
