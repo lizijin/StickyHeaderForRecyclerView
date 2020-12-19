@@ -12,7 +12,7 @@ package com.xuanyu.stickyheader;
 import android.util.Log;
 
 import java.util.HashMap;
-
+//todo jiangxuanyu 如果回收的次数明显小于反射创建的次数直接给开发者报错
 public class StickyHeaderModelPool {
     private final static HashMap<Class<BaseStickyHeaderModel<?>>, Pools.SynchronizedPool<BaseStickyHeaderModel<?>>> sPools = new HashMap<>();
 
