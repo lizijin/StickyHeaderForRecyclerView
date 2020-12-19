@@ -29,10 +29,25 @@ public class OffsetStickyHeaderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_sticky_header);
+
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
+        findViewById(R.id.layout_switch).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_turn_on).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                turnOn();
+            }
+        });
+
+        findViewById(R.id.button_turn_off).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                turnOff();
+            }
+        });
 
         List<Naming> models = new ArrayList<>();
         models.addAll(getCharacters(R.array.feihuwaizhuan, "飞狐外传"));
@@ -71,5 +86,13 @@ public class OffsetStickyHeaderActivity extends AppCompatActivity {
             namings.add(new Person(name));
         }
         return namings;
+    }
+    public void turnOn() {
+        StickyHeaderHelper.turnStickyHeader(true, mRecyclerView);
+    }
+
+    public void turnOff() {
+        StickyHeaderHelper.turnStickyHeader(false, mRecyclerView);
+
     }
 }
