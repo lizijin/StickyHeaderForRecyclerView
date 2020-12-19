@@ -35,6 +35,10 @@ public class SmallHeaderViewStickyHeaderActivity extends AppCompatActivity {
         mHeaderLayout = findViewById(R.id.header_layout);
 
         List<Naming> models = new ArrayList<>();
+        String[] names = getResources().getStringArray(R.array.feihuwaizhuan);
+        for (String name : names) {
+            models.add(new Person(name));
+        }
         models.addAll(getCharacters(R.array.feihuwaizhuan, "飞狐外传"));
         models.addAll(getCharacters(R.array.xueshangfeihu, "雪山飞狐"));
         models.addAll(getCharacters(R.array.lianchengjue, "连城诀"));

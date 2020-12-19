@@ -36,7 +36,21 @@ public class MultiStickyHeaderActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
+        findViewById(R.id.layout_switch).setVisibility(View.VISIBLE);
+        findViewById(R.id.layout_switch).setVisibility(View.VISIBLE);
+        findViewById(R.id.button_turn_on).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                turnOn();
+            }
+        });
 
+        findViewById(R.id.button_turn_off).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                turnOff();
+            }
+        });
         List<Naming> models = new ArrayList<>();
         models.add(new Author("梁羽生"));
         models.addAll(getCharacters(R.array.liangyusheng, ""));
@@ -51,7 +65,6 @@ public class MultiStickyHeaderActivity extends AppCompatActivity {
         models.addAll(getCharacters(R.array.shediaoyingxiong, "射雕英雄传"));
         models.addAll(getCharacters(R.array.baimaxiaoxifeng, "白马啸西风"));
         models.addAll(getCharacters(R.array.ludingji, "鹿鼎记"));
-
 
 
         mAdapter = new NamingStickyHeaderAdapter(models);
@@ -84,5 +97,14 @@ public class MultiStickyHeaderActivity extends AppCompatActivity {
             namings.add(new Person(name));
         }
         return namings;
+    }
+
+    public void turnOn() {
+        StickyHeaderHelper.turnStickyHeader(true, mRecyclerView);
+    }
+
+    public void turnOff() {
+        StickyHeaderHelper.turnStickyHeader(false, mRecyclerView);
+
     }
 }
