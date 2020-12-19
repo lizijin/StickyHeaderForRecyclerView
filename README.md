@@ -33,16 +33,6 @@ StickyHeaderForRecyclerView
 - 支持横向RecyclerView吸顶
 
 ---
-## 介绍
-StickyHeaderForRecyclerView库主要的功能是方便RecyclerView实现吸顶功能。它目前支持以下功能:
-
-1. 支持单类型吸顶功能
-2. 支持多类型吸顶功能
-3. 支持开启和关闭吸顶功能
-4. 支持指定位置吸顶功能
-5. 支持设置吸顶偏移量
-6. 支持自定义RecyclerView上Item吸顶边界自定义
-7. 可以无缝配合AppBarLayout
 
 ## 效果
 - 支持单类型吸顶功能
