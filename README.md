@@ -83,7 +83,7 @@ allprojects {
 
 ```
 dependencies {
-   implementation 'com.xuanyu.stickyheader:stickyheader:1.0.0'
+   implementation 'com.xuanyu.stickyheader:stickyheader:1.0.1'
  }
 ```
 2. 布局文件增加吸顶Layout,header.layout为吸顶布局的占位布局
