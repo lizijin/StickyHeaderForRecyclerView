@@ -190,20 +190,37 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                 } else {
                     System.out.println("jiangbin stickyHeaderBottom 33333");
                     mStickyHeaderLayout.setVisibility(VISIBLE);
+                    boolean isSameType = mCurrentStickyHeaderNode.getStickyHeaderModel().getClass().equals(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass());
                     View newStickyView = mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, mRecyclerView.getContext());
                     addStickyView(newStickyView);
-                    mStickyHeaderLayout.setAlpha(0);
-                    System.out.println("jiangbin stickyHeaderBottom 33333 Alpha0");
+                    //todo jiangxuanyu 不同类型的吸顶View会闪的问题需要解决
+                    if (isSameType) {
+                        System.out.println("jiangbin stickyHeaderBottom 33333 isSameType");
 
-                    newStickyView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mStickyHeaderLayout.setAlpha(1);
-                            System.out.println("jiangbin stickyHeaderBottom 33333 Alpha1");
+                        newStickyView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("jiangbin stickyHeaderBottom 33333 Alpha1");
 
-                            ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
-                        }
-                    });
+                                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
+                            }
+                        });
+                    } else {
+                        mStickyHeaderLayout.setAlpha(0);
+                        System.out.println("jiangbin stickyHeaderBottom 33333 Alpha0");
+
+                        newStickyView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mStickyHeaderLayout.setAlpha(1);
+                                System.out.println("jiangbin stickyHeaderBottom 33333 Alpha1");
+
+                                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
+                            }
+                        });
+                    }
+
+
                     ///11111
                     mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().onBindView();
                 }
