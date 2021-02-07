@@ -28,6 +28,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     private int mStickyHeaderLayoutTop;
     private ViewGroup mStickyHeaderLayout;
     private RecyclerView mRecyclerView;
+    private T mPrevStickyModel;
     private StickyHeaderAdapter<T> mAdapter;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private StickyHeaderNode<T> mCurrentStickyHeaderNode;// 当前吸顶的Node
@@ -172,6 +173,22 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             BaseStickyHeaderModel<T> currentStickyHeaderModel = findCurrentStickyHeaderModel(recyclerView);
 
             if (currentStickyHeaderModel == null) {
+
+                if (nextStickyHeaderModel != null
+                        && ((recyclerViewItemView = nextStickyHeaderModel.getRecyclerViewItemView()) != null)
+                        && (getItemViewTop(recyclerViewItemView) <= mStickyHeaderLayoutTop + mDownOffset)) {
+                    //如果在mStickyHeaderLayoutTop 和mStickyHeaderLayoutTop + mDownOffset之间吸顶不可见
+                    System.out.println("jiangbin stickyHeaderBottom 2222 66666 " + nextStickyHeaderModel.getRecyclerViewItemModel());
+
+                    return;
+                }
+                if (nextStickyHeaderModel != null
+                        && ((nextStickyHeaderModel.getRecyclerViewItemModel()) != mPrevStickyModel)) {
+                    return;
+                }
+                if (nextStickyHeaderModel != null)
+                    System.out.println("jiangbin stickyHeaderBottom 2222 5555");
+
                 //当前不是紧相连状态，而且当前吸顶不在屏幕内，必须保证吸顶可见  解决header比较小，快速往下滑，吸顶消失
                 ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());
                 return;
@@ -228,6 +245,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                 mCurrentStickyHeaderNode.setPrevNode(null);
                 StickyHeaderModelPool.recycle(mCurrentStickyHeaderNode.getStickyHeaderModel());
                 mCurrentStickyHeaderNode = prevTemp;
+                mPrevStickyModel = currentStickyHeaderModel.getRecyclerViewItemModel();
 
             }
             StickyHeaderModelPool.recycle(currentStickyHeaderModel);

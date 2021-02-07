@@ -60,7 +60,7 @@ public class OffsetStickyHeaderActivity extends AppCompatActivity {
         mAdapter = new NamingStickyHeaderAdapter(models);
         mRecyclerView.setAdapter(mAdapter);
 
-        StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 20);
+        StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 50);
         //todo jiangxuanyu 第一个Item处有bug
 
         StickyHeaderRegistry.registerTransfer(Book.class, BookStickyHeaderModel.class);

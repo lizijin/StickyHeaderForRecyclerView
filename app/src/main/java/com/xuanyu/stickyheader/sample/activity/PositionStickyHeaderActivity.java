@@ -45,7 +45,7 @@ public class PositionStickyHeaderActivity extends AppCompatActivity {
         mAdapter = new NamingStickyHeaderAdapter(models);
         mRecyclerView.setAdapter(mAdapter);
 
-        StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 0);
+        StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 50);
         StickyHeaderRegistry.registerTransfer(Book.class, BookStickyHeaderModel.class);
 
 
