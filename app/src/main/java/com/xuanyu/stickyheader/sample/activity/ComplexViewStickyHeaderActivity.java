@@ -31,7 +31,14 @@ public class ComplexViewStickyHeaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complex_view_sticky_header);
         mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public void onLayoutCompleted(RecyclerView.State state) {
+                super.onLayoutCompleted(state);
+                StickyHeaderHelper.rebuildStickyHeader(mRecyclerView);
+
+            }
+        });
         mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
 

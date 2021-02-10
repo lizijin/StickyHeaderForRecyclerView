@@ -25,7 +25,14 @@ public class StickyHeaderHelper {
             recyclerView.addOnScrollListener(listener);
         }
     }
-
+    public static <T> void init(RecyclerView recyclerView, int headerViewTop, ViewGroup stickyHeaderLayout, final int offset) {
+        if (recordMap.get(recyclerView) == null) {
+            StickyHeaderOnScrollListener<T> listener = new StickyHeaderOnScrollListener<T>(recyclerView, stickyHeaderLayout, headerViewTop);
+            listener.setOffset(offset);
+            recordMap.put(recyclerView, listener);
+            recyclerView.addOnScrollListener(listener);
+        }
+    }
     public static <T> void init(final RecyclerView recyclerView, final ViewGroup stickyHeaderLayout, final int offset) {
         if (recordMap.get(recyclerView) == null) {
             stickyHeaderLayout.post(new Runnable() {
@@ -46,6 +53,12 @@ public class StickyHeaderHelper {
         StickyHeaderOnScrollListener<?> listener = recordMap.get(recyclerView);
         if (listener == null) return;
         listener.turnStickyHeader(on);
+    }
+
+    public static void rebuildStickyHeader(RecyclerView recyclerView) {
+        StickyHeaderOnScrollListener<?> listener = recordMap.get(recyclerView);
+        if (listener == null) return;
+        listener.rebuildStickyHeader();
     }
 
     /**
@@ -69,3 +82,4 @@ public class StickyHeaderHelper {
         return iStickyHeaderModel;
     }
 }
+

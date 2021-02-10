@@ -35,7 +35,14 @@ public class DataChangedStickyHeaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_changed_sticky_header);
         mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public void onLayoutCompleted(RecyclerView.State state) {
+                super.onLayoutCompleted(state);
+                StickyHeaderHelper.rebuildStickyHeader(mRecyclerView);
+
+            }
+        });
         mHeaderLayout = findViewById(R.id.header_layout);
         mRecyclerView.getItemAnimator().setAddDuration(1000);
         mRecyclerView.getItemAnimator().setRemoveDuration(1000);

@@ -32,7 +32,14 @@ public class ScrollToPositionStickyHeaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll_to_position_sticky_header);
         mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public void onLayoutCompleted(RecyclerView.State state) {
+                super.onLayoutCompleted(state);
+                StickyHeaderHelper.rebuildStickyHeader(mRecyclerView);
+
+            }
+        });
         mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
         mEditText = findViewById(R.id.edit_text_position);

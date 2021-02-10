@@ -10,15 +10,14 @@
 package com.xuanyu.stickyheader;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +29,6 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     private RecyclerView mRecyclerView;
     private T mPrevStickyModel;
     private StickyHeaderAdapter<T> mAdapter;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
     private StickyHeaderNode<T> mCurrentStickyHeaderNode;// 当前吸顶的Node
     private boolean mOn = true;
     private Context mContext;
@@ -38,13 +36,8 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     //向上滑动偏移量 默认为0 单位dp
     private int mTopOffset = 0;
     private int mDownOffset = 0;
-    //    private boolean mChanged = false;
-    private Runnable rebuildStickyHeaderRunnable = new Runnable() {
-        @Override
-        public void run() {
-            rebuildStickyHeader();
-        }
-    };
+    private String tag = "StickyHeaderOnScrollListener";
+    private int scrollState = 0;
 
     public StickyHeaderOnScrollListener(RecyclerView recyclerView, ViewGroup stickyHeaderLayout, int headViewTop) {
         this.mStickyHeaderLayoutTop = headViewTop;
@@ -52,77 +45,13 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         this.mRecyclerView = recyclerView;
         this.mContext = recyclerView.getContext();
         this.mAdapter = (StickyHeaderAdapter<T>) mRecyclerView.getAdapter();
-        mRecyclerView.getAdapter().registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-            }
-
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                super.onItemRangeChanged(positionStart, itemCount);
-                RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
-                if (mOn && itemAnimator != null) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, itemAnimator.getChangeDuration() + 100L);
-                }
-            }
-
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
-                super.onItemRangeChanged(positionStart, itemCount, payload);
-                RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
-                if (mOn && itemAnimator != null) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, itemAnimator.getChangeDuration() + 100L);
-                }
-            }
-
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
-                if (mOn && itemAnimator != null) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, itemAnimator.getAddDuration() + 100L);
-                }
-                super.onItemRangeInserted(positionStart, itemCount);
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
-                if (mOn && itemAnimator != null) {
-
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, itemAnimator.getRemoveDuration() + 300L);
-                }
-                super.onItemRangeRemoved(positionStart, itemCount);
-            }
-
-            @Override
-            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-                RecyclerView.ItemAnimator itemAnimator = mRecyclerView.getItemAnimator();
-                if (mOn && itemAnimator != null) {
-                    mHandler.postDelayed(rebuildStickyHeaderRunnable, itemAnimator.getMoveDuration() + 100L);
-                }
-                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
-            }
-        });
-
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (mOn) {
-                    rebuildStickyHeader();
-                }
-                System.out.println("jiangbin onListener addOnGlobalLayoutListener");
-
-            }
-        });
-
-
     }
 
     @Override
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        Log.d("jiangbinpage", "onScrollStateChanged " + newState);
+        Log.d(tag, "onScrollStateChanged " + newState);
+        scrollState = newState;
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
             rebuildStickyHeader();
         }
@@ -131,6 +60,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        Log.d(tag, "onScrolled " + dy);
         if (!mOn) return;
         stickyHeader(recyclerView, dx, dy);
     }
@@ -147,6 +77,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     private void stickyHeaderBottom(RecyclerView recyclerView, int dy) {
         //向下滑动
         if (mCurrentStickyHeaderNode == null) {
+            Log.d(tag, "stickyHeaderBottom 当前没有吸顶直接返回 ");
             return;
         }
         BaseStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView, false);
@@ -158,84 +89,67 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
                 && getItemViewTop(recyclerViewItemView) <= (mStickyHeaderLayoutTop + mDownOffset + mStickyHeaderLayout.getMeasuredHeight() - dy))) {
             //紧相连状态
             int wannaTop = Math.min(mStickyHeaderLayoutTop, getItemViewTop(recyclerViewItemView) - mStickyHeaderLayout.getMeasuredHeight() - mDownOffset);
-            System.out.println("jiangbin stickyHeaderBottom 11111 " + wannaTop);
+            Log.d(tag, "stickyHeaderBottom 向下滑动 紧紧相连 " + wannaTop);
+
 
             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
 
             StickyHeaderModelPool.recycle(nextStickyHeaderModel);
         } else {
             //不是紧相连状态
-            System.out.println("jiangbin stickyHeaderBottom 2222");
+            Log.d(tag, "stickyHeaderBottom3 向下滑动 不是紧紧相连");
 
             if (nextStickyHeaderModel != null) {//往下滑动，下一个没用，直接回收掉
                 StickyHeaderModelPool.recycle(nextStickyHeaderModel);
             }
             BaseStickyHeaderModel<T> currentStickyHeaderModel = findCurrentStickyHeaderModel(recyclerView);
 
+            //当前吸顶 对应的View 不在屏幕内
             if (currentStickyHeaderModel == null) {
 
                 if (nextStickyHeaderModel != null
                         && ((recyclerViewItemView = nextStickyHeaderModel.getRecyclerViewItemView()) != null)
                         && (getItemViewTop(recyclerViewItemView) <= mStickyHeaderLayoutTop + mDownOffset)) {
                     //如果在mStickyHeaderLayoutTop 和mStickyHeaderLayoutTop + mDownOffset之间吸顶不可见
-                    System.out.println("jiangbin stickyHeaderBottom 2222 66666 " + nextStickyHeaderModel.getRecyclerViewItemModel());
+                    Log.d(tag, "jiangbin stickyHeaderBottom 在mStickyHeaderLayoutTop 和mStickyHeaderLayoutTop + mDownOffset之间 " + nextStickyHeaderModel.getRecyclerViewItemModel());
 
                     return;
                 }
                 if (nextStickyHeaderModel != null
                         && ((nextStickyHeaderModel.getRecyclerViewItemModel()) != mPrevStickyModel)) {
+                    Log.d(tag, "jiangbin stickyHeaderBottom 下一个吸顶不正确 " + nextStickyHeaderModel.getRecyclerViewItemModel());
+
                     return;
                 }
                 if (nextStickyHeaderModel != null)
-                    System.out.println("jiangbin stickyHeaderBottom 2222 5555");
+                    Log.d(tag, "jiangbin stickyHeaderBottom 2222 5555");
 
                 //当前不是紧相连状态，而且当前吸顶不在屏幕内，必须保证吸顶可见  解决header比较小，快速往下滑，吸顶消失
+                Log.d(tag, "jiangbin offsetTopAndBottom 22222 ");
+
                 ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());
                 return;
             }
-            System.out.println("jiangbin stickyHeaderBottom 2222 444444");
 
             //当前吸顶View 不吸顶了
             if (getItemViewTop(currentStickyHeaderModel.getRecyclerViewItemView()) >= mStickyHeaderLayoutTop) {
-                System.out.println("jiangbin stickyHeaderBottom 2222 222222");
 
                 if (mCurrentStickyHeaderNode.getPrevNode() == null) {
                     //前面没有吸顶的View了
-                    System.out.println("jiangbin stickyHeaderBottom 2222 333333");
-
+                    Log.d(tag, "jiangbin stickyHeaderBottom 当前吸顶View不吸顶了，前面没有吸顶View");
                     mStickyHeaderLayout.setVisibility(View.GONE);
                 } else {
-                    System.out.println("jiangbin stickyHeaderBottom 33333");
+                    Log.d(tag, "jiangbin stickyHeaderBottom 当前吸顶View不吸顶了，前面有吸顶View 替换吸顶");
                     mStickyHeaderLayout.setVisibility(VISIBLE);
-                    boolean isSameType = mCurrentStickyHeaderNode.getStickyHeaderModel().getClass().equals(mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().getClass());
                     View newStickyView = mCurrentStickyHeaderNode.getPrevNode().getStickyHeaderModel().createIfAbsent(mRecyclerView, mRecyclerView.getContext());
                     addStickyView(newStickyView);
-                    //todo jiangxuanyu 不同类型的吸顶View会闪的问题需要解决
-                    if (isSameType) {
-                        System.out.println("jiangbin stickyHeaderBottom 33333 isSameType");
 
-                        newStickyView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("jiangbin stickyHeaderBottom 33333 Alpha1");
-
-                                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
-                            }
-                        });
-                    } else {
-                        mStickyHeaderLayout.setAlpha(0);
-                        System.out.println("jiangbin stickyHeaderBottom 33333 Alpha0");
-
-                        newStickyView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mStickyHeaderLayout.setAlpha(1);
-                                System.out.println("jiangbin stickyHeaderBottom 33333 Alpha1");
-
-                                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
-                            }
-                        });
-                    }
+                    newStickyView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight() - mStickyHeaderLayout.getTop());
+                        }
+                    });
 
 
                     ///11111
@@ -260,39 +174,53 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
      */
     private void stickyHeaderTop(RecyclerView recyclerView, int dy) {
         BaseStickyHeaderModel<T> nextStickyHeaderModel = findNextStickyHeaderModel(recyclerView, true);
-        if (nextStickyHeaderModel == null) return;
+        if (nextStickyHeaderModel == null) {
+            Log.d(tag, "stickyHeaderTop 下一个吸顶的View为空 直接返回");
+
+            return;
+        }
 
         //下一个可能需要吸顶的View 进入吸顶状态
         View nextStickyItemView = nextStickyHeaderModel.getRecyclerViewItemView();
         if (getItemViewTop(nextStickyItemView) < mStickyHeaderLayoutTop) {
-            System.out.println("jiangbin stickyHeaderTop 11111 ");
+            Log.d(tag, "stickyHeaderTop 下一个吸顶的View进入吸顶状态");
 
 
             View stickyHeaderView = nextStickyHeaderModel.createIfAbsent(mRecyclerView, recyclerView.getContext());
 
             addStickyView(stickyHeaderView);
+            nextStickyHeaderModel.onBindView();
             if (mCurrentStickyHeaderNode == null) {
                 //如果当前没有吸顶的View。直接设置可见，并add到viewGroup中
                 mStickyHeaderLayout.setVisibility(VISIBLE);
             } else {
                 //如果当前有吸顶的View。将mStickyHeaderLayout重置回来
-                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
+                Log.d(tag, "stickyHeaderTop 当前有吸顶,将mStickyHeaderLayout重置回来 top " + mStickyHeaderLayout.getTop() + " endline " + (mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight()) + nextStickyHeaderModel.getRecyclerViewItemModel());
+
+                mStickyHeaderLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
+
+                    }
+                });
             }
-            nextStickyHeaderModel.onBindView();
             StickyHeaderNode<T> stickyHeaderNode = new StickyHeaderNode();
             stickyHeaderNode.setStickyHeaderModel(nextStickyHeaderModel);
             stickyHeaderNode.setPrevNode(mCurrentStickyHeaderNode);
             mCurrentStickyHeaderNode = stickyHeaderNode;
         } else if (getItemViewTop(nextStickyItemView) <= (mStickyHeaderLayoutTop + mStickyHeaderLayout.getMeasuredHeight() + mTopOffset)) {
-            //紧相邻
-            System.out.println("jiangbin stickyHeaderTop 22222 ");
-
-            int wannaTop = getItemViewTop(nextStickyItemView) - mStickyHeaderLayout.getMeasuredHeight() - mTopOffset;
-            wannaTop = MathUtils.clamp(wannaTop, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight(), mStickyHeaderLayoutTop);
-            ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());
+            // 紧相邻
+            // 优化点 2020.2.10  解决FLING状态下 滑动过快有闪烁的问题
+            if (scrollState != RecyclerView.SCROLL_STATE_SETTLING ) {
+                int wannaTop = getItemViewTop(nextStickyItemView) - mStickyHeaderLayout.getMeasuredHeight() - mTopOffset;
+                wannaTop = MathUtils.clamp(wannaTop, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight(), mStickyHeaderLayoutTop);
+                Log.d(tag, "stickyHeaderTop 紧紧相连 " + wannaTop + nextStickyHeaderModel.getRecyclerViewItemModel());
+                ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, wannaTop - mStickyHeaderLayout.getTop());
+            }
             StickyHeaderModelPool.recycle(nextStickyHeaderModel);
         } else {
-            System.out.println("jiangbin stickyHeaderTop 33333 ");
+            Log.d(tag, "stickyHeaderTop 下一个可能吸顶的View比较远 " + nextStickyHeaderModel.getRecyclerViewItemModel());
 
             StickyHeaderModelPool.recycle(nextStickyHeaderModel);
             rebuildStickyHeader();
@@ -397,35 +325,39 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
     }
 
 
-    private void rebuildStickyHeader() {
+    public void rebuildStickyHeader() {
         if (!mOn) return;
 
         //todo mRecyclerView.getMeasuredWidth() / 4 应该更优雅一点
+        //todo jiangbin 这个点得修改一下
         View view = findChildViewUnder(mRecyclerView, mRecyclerView.getMeasuredWidth() / 4, mStickyHeaderLayoutTop);
         //如果该位置没有View 或者View的Top == mStickyHeaderLayoutTop
         if (view == null) {
-            System.out.println("rebuildStickyHeader method view == null");
+            Log.d(tag, "rebuildStickyHeader 当前吸顶位置下没有View直接返回");
             return;
         }
 
         int position = mRecyclerView.getChildAdapterPosition(view);
-        System.out.println("rebuildStickyHeader position = " + position);
+        Log.d(tag, "rebuildStickyHeader position = " + position);
         if (position == RecyclerView.NO_POSITION) {
+            Log.d(tag, "rebuildStickyHeader position无效直接返回");
+
             return;
         }
 
-        int itemCount = ((RecyclerView.Adapter) mAdapter).getItemCount();
-        System.out.println("rebuildStickyHeader itemCount = " + itemCount);
 
         BaseStickyHeaderModel<T> stickyHeaderModel = null;
         for (int i = position; i >= 0; i--) {
             //往上找到吸顶的节点
-            stickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, i);
+            stickyHeaderModel = mAdapter.transferToStickyHeaderModel(i);
             if (stickyHeaderModel != null) break;
         }
         if (getItemViewTop(view) == mStickyHeaderLayoutTop && stickyHeaderModel != null) {
             StickyHeaderModelPool.recycle(stickyHeaderModel);
-            System.out.println("rebuildStickyHeader 吸顶View刚好在top位置 ");
+            Log.d(tag, "rebuildStickyHeader 吸顶View刚好在top位置 ");
+            mStickyHeaderLayout.setVisibility(View.GONE);
+
+            resetStickyHeader();
             return;
 
         }
@@ -435,7 +367,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
             T currentItemModel = mCurrentStickyHeaderNode.getStickyHeaderModel().getRecyclerViewItemModel();
             T wannaItemModel = stickyHeaderModel.getRecyclerViewItemModel();
             if (currentItemModel != null && wannaItemModel != null && currentItemModel.equals(wannaItemModel)) {
-                System.out.println("rebuildStickyHeader 前有吸顶，而且吸顶的位置没有变化，直接返回");
+                Log.d(tag, "rebuildStickyHeader 前有吸顶，而且吸顶的位置没有变化，直接返回");
                 //如有当前有吸顶，而且吸顶的位置没有变化，直接返回
                 StickyHeaderModelPool.recycle(stickyHeaderModel);
                 return;
@@ -445,6 +377,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         if (stickyHeaderModel == null) {
             //如果当前没有吸顶
             mStickyHeaderLayout.setVisibility(View.GONE);
+            Log.d(tag, "rebuildStickyHeader 当前没有吸顶直接返回 ");
             return;
         }
         if (mStickyHeaderLayout.getVisibility() == View.GONE) {
@@ -460,46 +393,70 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
         //寻找可能紧相连的吸顶Model
         BaseStickyHeaderModel<T> mayBeNeighborStickyHeaderModel = null;
-        System.out.println("jiangbin rebuildd 11111 " + index);
+        Log.d(tag, "jiangbin rebuildd 11111 " + index);
         if (index != -1) {
             for (int i = index; i < mRecyclerView.getChildCount(); i++) {
-                System.out.println("jiangbin rebuildd 5555 " + i);
+
+                Log.d(tag, "jiangbin rebuildd 5555 " + i);
                 View child = mRecyclerView.getChildAt(i);
                 int childAdapterPosition = mRecyclerView.getChildAdapterPosition(child);
                 if (childAdapterPosition == RecyclerView.NO_POSITION) {
                     continue;
                 }
-                mayBeNeighborStickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, childAdapterPosition);
+                mayBeNeighborStickyHeaderModel = mAdapter.transferToStickyHeaderModel(childAdapterPosition);
                 if (mayBeNeighborStickyHeaderModel != null) {
+                    //如果可能吸顶 == 吸顶，过滤掉
+                    if (mayBeNeighborStickyHeaderModel.getRecyclerViewItemModel().equals(stickyHeaderModel)) {
+                        StickyHeaderModelPool.recycle(mayBeNeighborStickyHeaderModel);
+                        mayBeNeighborStickyHeaderModel = null;
+                        continue;
+                    }
                     mayBeNeighborStickyHeaderModel.setRecyclerViewItemView(child);
+                    //如果距离太远 过滤掉
+                    if ((getItemViewTop(child) - mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight()) > mTopOffset) {
+                        StickyHeaderModelPool.recycle(mayBeNeighborStickyHeaderModel);
+                        mayBeNeighborStickyHeaderModel = null;
+                        continue;
+                    }
                     break;
                 }
             }
-            System.out.println("jiangbin rebuildd 22222" + mayBeNeighborStickyHeaderModel);
+            Log.d(tag, "jiangbin rebuildd 22222" + mayBeNeighborStickyHeaderModel);
 
         }
         if (mayBeNeighborStickyHeaderModel == null) {
-            System.out.println("jiangbin rebuildd 3333");
-
+            Log.d(tag, "jiangbin rebuildd 3333");
+            Log.d(tag, "jiangbin offsetTopAndBottom 6666666 ");
             ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());//offset为正 往下平移
         } else {
-            System.out.println("jiangbin rebuildd 44444");
-            int maybeNeighborTop = getItemViewTop(mayBeNeighborStickyHeaderModel.getRecyclerViewItemView()) - mTopOffset;
-            System.out.println("jiangbin rebuildd 44444 maybeNeighborTop " + maybeNeighborTop);
 
-            // 下一个吸顶的Model 与吸顶底部的距离
-            int distance = maybeNeighborTop - mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight();
-            final int offset = MathUtils.clamp(distance, -mStickyHeaderLayout.getMeasuredHeight(), 0);
-            System.out.println("jiangbin rebuildd 44444 offset " + offset);
-            mStickyHeaderLayout.setAlpha(0);
-            mStickyHeaderLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mStickyHeaderLayout.setAlpha(1);
+            if (scrollState != RecyclerView.SCROLL_STATE_SETTLING) {
+                int wannaTop = getItemViewTop(mayBeNeighborStickyHeaderModel.getRecyclerViewItemView()) - mStickyHeaderLayout.getMeasuredHeight() - mTopOffset;
+                wannaTop = MathUtils.clamp(wannaTop, mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight(), mStickyHeaderLayoutTop);
 
-                    ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, offset + mStickyHeaderLayoutTop - mStickyHeaderLayout.getTop());
-                }
-            });
+//            int maybeNeighborTop = getItemViewTop(mayBeNeighborStickyHeaderModel.getRecyclerViewItemView()) - mTopOffset;
+//           Log.d(tag, "jiangbin rebuildd 44444 maybeNeighborTop " + maybeNeighborTop);
+//
+//            // 下一个吸顶的Model 与吸顶底部的距离
+//            int distance = maybeNeighborTop - mStickyHeaderLayoutTop - mStickyHeaderLayout.getMeasuredHeight();
+//           Log.d(tag, "jiangbin rebuildd 44444 maybeNeighborTop distance " + distance);
+//
+//            //wannaTop == offset
+//            final int offset = MathUtils.clamp(distance, -mStickyHeaderLayout.getMeasuredHeight(), 0);
+//           Log.d(tag, "jiangbin rebuildd 44444 offset " + offset);
+                final int offset = wannaTop;
+
+                mStickyHeaderLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(tag, "jiangbin offsetTopAndBottom 777777 " + (offset - mStickyHeaderLayout.getTop()));
+                        ViewCompat.offsetTopAndBottom(mStickyHeaderLayout, offset - mStickyHeaderLayout.getTop());
+                        Rect rect = new Rect();
+                        ViewGroupUtils.getDescendantRect((ViewGroup) mStickyHeaderLayout.getParent(), mStickyHeaderLayout, rect);
+                        mStickyHeaderLayout.getParent().invalidateChild(mStickyHeaderLayout, rect);
+                    }
+                });
+            }
             StickyHeaderModelPool.recycle(mayBeNeighborStickyHeaderModel);
         }
         View stickyHeaderView = stickyHeaderModel.createIfAbsent(mRecyclerView, mRecyclerView.getContext());
@@ -508,7 +465,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
         StickyHeaderModelPool.recycle(stickyHeaderModel);
         rebuildStickyHeadNode(position);
-        System.out.println("rebuildStickyHeader method position = " + position);
+        Log.d(tag, "rebuildStickyHeader method position = " + position);
 
 
     }
@@ -524,7 +481,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         while (mCurrentStickyHeaderNode != null) {
             BaseStickyHeaderModel<T> stickyHeaderModel = mCurrentStickyHeaderNode.getStickyHeaderModel();
             mCurrentStickyHeaderNode.setStickyHeaderModel(null);
-            System.out.println("StickyHeaderModelPool -- recycle");
+            Log.d(tag, "StickyHeaderModelPool -- recycle");
             StickyHeaderModelPool.recycle(stickyHeaderModel);
             StickyHeaderNode<T> prevNode = mCurrentStickyHeaderNode.getPrevNode();
             mCurrentStickyHeaderNode.setPrevNode(null);
@@ -532,10 +489,10 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         }
     }
 
-    public void rebuildStickyHeadNode(int position) {
+    private void rebuildStickyHeadNode(int position) {
         StickyHeaderNode<T> nextNode = null;
         for (int index = position; index >= 0; index--) {
-            BaseStickyHeaderModel<T> stickyHeaderModel = StickyHeaderHelper.transferToStickyHeaderModel(mAdapter, index);
+            BaseStickyHeaderModel<T> stickyHeaderModel = mAdapter.transferToStickyHeaderModel(index);
             if (stickyHeaderModel == null) continue;
             StickyHeaderNode<T> stickyHeaderNode = new StickyHeaderNode();
             stickyHeaderNode.setStickyHeaderModel(stickyHeaderModel);
@@ -556,6 +513,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         } else {
             resetStickyHeader();
             mStickyHeaderLayout.setVisibility(View.GONE);
+            Log.d(tag, "setVisibility(View.GONE) 33333");
         }
     }
 
@@ -579,8 +537,12 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
         for (int i = 0; i < mStickyHeaderLayout.getChildCount(); i++) {
             View child = mStickyHeaderLayout.getChildAt(i);
             if (child == view) {
-                child.setVisibility(VISIBLE);
+                Log.d(tag, "jiangbin addStickyView 2222");
+                if (child.getVisibility() != VISIBLE) {
+                    child.setVisibility(VISIBLE);
+                }
             } else {
+                Log.d(tag, "jiangbin addStickyView 3333");
                 child.setVisibility(View.GONE);
             }
         }
@@ -588,6 +550,7 @@ public class StickyHeaderOnScrollListener<T> extends RecyclerView.OnScrollListen
 
     private void addStickyView(View view) {
         if (!stickyLayoutContains(view)) {
+            Log.d(tag, "jiangbin addStickyView 1111");
             mStickyHeaderLayout.addView(view);
         }
         onlyShowStickyView(view);

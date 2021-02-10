@@ -31,7 +31,14 @@ public class OffsetStickyHeaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_single_sticky_header);
 
         mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public void onLayoutCompleted(RecyclerView.State state) {
+                super.onLayoutCompleted(state);
+                StickyHeaderHelper.rebuildStickyHeader(mRecyclerView);
+
+            }
+        });
         mRecyclerView.setItemAnimator(null);
         mHeaderLayout = findViewById(R.id.header_layout);
         findViewById(R.id.layout_switch).setVisibility(View.VISIBLE);

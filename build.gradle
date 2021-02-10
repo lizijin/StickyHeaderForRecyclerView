@@ -2,7 +2,7 @@
 buildscript {
     ext.kotlin_version = '1.4.21'
     repositories {
-        jcenter()
+        jcenter{ url 'http://jcenter.bintray.com' }
         maven {
             url "https://dl.bintray.com/xuanyudaddy/sticky-header-recyclerview"
         }
@@ -23,7 +23,7 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        jcenter{ url 'http://jcenter.bintray.com' }
         maven {
             url "https://dl.bintray.com/xuanyudaddy/sticky-header-recyclerview"
         }

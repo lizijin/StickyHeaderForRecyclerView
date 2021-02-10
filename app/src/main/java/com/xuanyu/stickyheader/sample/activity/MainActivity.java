@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.xuanyu.stickyheader.StickyHeaderHelper;
 import com.xuanyu.stickyheader.sample.R;
 import com.xuanyu.stickyheader.sample.bean.RouteItem;
 
@@ -27,7 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.main_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this){
+            @Override
+            public void onLayoutCompleted(RecyclerView.State state) {
+                super.onLayoutCompleted(state);
+                StickyHeaderHelper.rebuildStickyHeader(mRecyclerView);
+
+            }
+        });
         List<RouteItem> routeItems = new ArrayList<>();
         RouteItem singleStickyHeaderDemo = new RouteItem("单类型吸顶功能", "演示了RecyclerView中只有单个类型的吸顶情况", SingleStickyHeaderActivity.class);
         routeItems.add(singleStickyHeaderDemo);
