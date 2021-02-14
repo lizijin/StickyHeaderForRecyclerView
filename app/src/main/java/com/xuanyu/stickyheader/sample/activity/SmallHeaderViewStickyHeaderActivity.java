@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +31,7 @@ public class SmallHeaderViewStickyHeaderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_sticky_header);
         mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this){
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this) {
             @Override
             public void onLayoutCompleted(RecyclerView.State state) {
                 super.onLayoutCompleted(state);
@@ -55,7 +56,15 @@ public class SmallHeaderViewStickyHeaderActivity extends AppCompatActivity {
         models.addAll(getCharacters(R.array.ludingji, "鹿鼎记"));
         mAdapter = new NamingStickyHeaderAdapter(models);
         mRecyclerView.setAdapter(mAdapter);
-
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    StickyHeaderHelper.rebuildStickyHeader(recyclerView);
+                }
+            }
+        });
         StickyHeaderHelper.init(mRecyclerView, mHeaderLayout, 20);
         StickyHeaderRegistry.registerTransfer(Book.class, SmallBookStickyHeaderModel.class);
 
@@ -72,10 +81,9 @@ public class SmallHeaderViewStickyHeaderActivity extends AppCompatActivity {
     }
 
 
-
     private List<Naming> getCharacters(int arrayId, String bookName) {
         List<Naming> namings = new ArrayList<>();
-        namings.add(new Book(bookName,true));
+        namings.add(new Book(bookName, true));
         String[] names = getResources().getStringArray(arrayId);
         for (String name : names) {
             namings.add(new Person(name));
